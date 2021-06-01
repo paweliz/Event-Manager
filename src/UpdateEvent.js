@@ -170,7 +170,7 @@ const UpdateEvent = () => {
         </div>
         <div className="flex flex-col mt-4">
         <label>Description:</label>
-        <textarea className="w-full border-2 hover:border-black" type="text"value={description}
+        <textarea className="w-full border-2 hover:border-black h-64" type="text"value={description}
           onChange={(e) => setDescription(e.target.value)}/>
         </div>
         <button className="self-center py-2 px-3 mt-3 border-2 bg-gray-200 shadow hover:shadow-lg hover:bg-black hover:text-white hover:border-black tracking-wider transform hover:scale-105">Submit</button>
