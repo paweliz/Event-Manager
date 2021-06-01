@@ -1,13 +1,70 @@
-body {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+/* base styles */
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: "Quicksand";
+  color: #272727;
+  background-color: #ffffff;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/*styles for searchbar imported as an external component*/
+.datalist-input {
+  /*the container must be positioned relative:*/
+  position: relative;
+  display: inline-block;
+  width: 100%;
+
+}
+
+.datalist-input .autocomplete-input {
+  width: 100%;
+}
+
+.datalist-input .datalist-items {
+  position: absolute;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+
+.datalist-input .default-datalist-items {
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+}
+
+.datalist-input .default-datalist-items div:not(.datalist-active-item) {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
+}
+
+.datalist-input .default-datalist-items div:not(.datalist-active-item):hover {
+  /*when hovering an item:*/
+  background-color: #e9e9e9;
+}
+
+.datalist-input .datalist-active-item {
+  /*when navigating through the items using the arrow keys:*/
+  cursor: pointer;
+}
+
+.datalist-input .datalist-active-item-default {
+  background-color: #000000;
+  color: #ffffff;
+  border-bottom: 1px solid #d4d4d4;
+  padding: 10px;
+}
+.datalist-input .autocomplete-input:focus{
+  outline: none;
+}
+.navtab {
+  @apply transition duration-150 ease-in-out transform hover:-translate-y-1 flex-1 text-center text-earie-black py-3 hover:text-white border-b-2 border-reddy-gray border-l border-r hover:border-black bg-gray-200 hover:bg-black hover:shadow;
 }
