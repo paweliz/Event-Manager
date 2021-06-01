@@ -9,7 +9,6 @@ import Login from './Login'
 import { AuthProvider } from "./customHooks/AuthContext" 
 import ForgotPassword from './ForgotPassword'
 import UpdateProfile from './UpdateProfile'
-import Dashboard from './Dashboard'
 import EventsDetails from './EventsDetails'
 import UpdateEvent from './UpdateEvent'
 import MyEvents from './MyEvents'
@@ -53,9 +52,6 @@ function App() {
           </Route>
           <Route path="/updateprofile"> 
             <UpdateProfile/>
-          </Route>
-          <Route path="/dashboard">
-            <Dashboard/>
           </Route>
           <Route path='*'>
             <NotFound/>
