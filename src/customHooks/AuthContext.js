@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import {auth} from '../firebase/firebaseConfig'
+import {auth, firestore} from '../firebase/firebaseConfig'
 
 
 const AuthContext = createContext()
@@ -13,8 +13,23 @@ export const AuthProvider = ({children}) => {
   const [loading, setLoading] = useState(true)
 
 
-  function signup(email, password){
-    return auth.createUserWithEmailAndPassword(email, password)
+  function signup(email, password, fullName){
+    return auth.createUserWithEmailAndPassword(email, password).then((res) => {
+      const user = auth.currentUser;
+      return user.sendEmailVerification();
+    }).then(()=>{
+      const user = auth.currentUser;
+      return firestore()
+      .collection('users')
+      .add({
+        userId: user.uid,
+        avatarUrl: '',
+        fullName: fullName,
+        emailAddress: email.toLowerCase(),
+        events: [],
+        dateCreated: Date.now()
+      });
+    })
 }
 
   function login(email, password){
@@ -37,10 +52,22 @@ export const AuthProvider = ({children}) => {
     return currentUser.updatePassword(password)
   }
 
+  function sendVerificationEmail(){
+    return currentUser.sendEmailVerification();
+  }
+
   useEffect(()=> {
     const unsubscribe = auth.onAuthStateChanged(user => {
-      setCurrentUser(user)
-      setLoading(false)
+      console.log('CurrentUser:', user);
+      setCurrentUser(user);
+      setLoading(false);
+      // if(user?.emailVerified === false) {
+        // console.log('should send email');
+        // return currentUser?.sendEmailVerification().then(()=>{
+        //   console.log('email should be sent');
+        //logout();
+        // });
+      //}
     })
 
     return unsubscribe
@@ -55,6 +82,7 @@ export const AuthProvider = ({children}) => {
     resetPassword,
     updateEmail,
     updatePassword,
+    sendVerificationEmail
     //setUsername
   }
   return ( 

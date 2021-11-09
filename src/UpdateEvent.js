@@ -8,6 +8,8 @@ import PlacesAutocomplete, {
 } from 'react-places-autocomplete'
 import useStorage from './customHooks/useStorage'
 import './index.css'
+import {firestore} from './firebase/firebaseConfig';
+import { getCollectionById } from './firebase/firebase';
 
 const UpdateEvent = () => {
   const { currentUser } = useAuth()
@@ -40,20 +42,21 @@ const UpdateEvent = () => {
   },[url])
 
   useEffect(()=>{
-    const eventRef = databaseStorage.ref('Event/' + id)
-    eventRef.on('value', (snapshot)=>{
-      const events = snapshot.val()
-      setEvents(events)
-      setTitle(events.title)
-      setDescription(events.description)
-      setOrganizer(events.organizer)
-      setLocation(events.location)
-      setCoordinates(events.coordinates)
-      setDate(events.date)
-      setCategory(events.category)
-      events.image ? setImage(events.image) : setImage(null)
-    })
+      getCollectionById('events', setEvents, id)
   },[])
+
+  useEffect(()=>{
+    if(events !== []) {
+    setTitle(events.title)
+    setDescription(events.description)
+    setOrganizer(events.organizer)
+    setLocation(events.location)
+    setCoordinates(events.coordinates)
+    setDate(events.date)
+    setCategory(events.category)
+    events.image ? setImage(events.image) : setImage(null)}
+    console.log(events);
+  }, [events])
   
   if(currentUser === null) {
     history.push('/login')
@@ -79,7 +82,6 @@ const UpdateEvent = () => {
   }
 
  const updateEvent = async () => {
-   const eventRef = databaseStorage.ref('Event/' + id)
    const event = {
     title,
     description,
@@ -94,14 +96,20 @@ const UpdateEvent = () => {
     updateDate
    }
    try {
-     eventRef.update(event)}
-     catch(e){
-       console.log(e.message)
-     }finally{
-       history.push('/')
-     }
+    //eventRef.push(event);
+    firestore()
+      .collection('events')
+      .doc(id)
+      .update(event)
+      //.then((doc) => updateUserEvents(user?.docId, event, user?.events, doc.id));
+  } catch (e) {
+    console.log('error', e.message);
+  } finally {
+    //console.log(event)
+    history.push('/');
+  }
+};
 
- }
 
  const handleSubmit = (e) => {
   e.preventDefault()

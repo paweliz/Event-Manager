@@ -1,23 +1,22 @@
-import {databaseStorage} from './firebase/firebaseConfig'
+import { getCollectionByGivenParam } from './firebase/firebase'
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"
 import { useAuth } from "./customHooks/AuthContext"
+import { useHistory } from "react-router-dom"
 
 const MyEvents = () => {
   const [events, setEvents] = useState([])
   const { currentUser } = useAuth()
+  const history = useHistory()
+
   useEffect(()=>{
-    const eventRef = databaseStorage.ref('Event')
-    eventRef.on('value', (snapshot)=>{
-      const events = snapshot.val()
-      const eventList = []
-      for (let id in events){
-        if(events[id].author === currentUser.uid){
-        eventList.push({...events[id],id})}
-      }
-      setEvents(eventList)
-    })
+    getCollectionByGivenParam('events', setEvents, 'author', currentUser.uid)
   },[])
+
+  if(currentUser?.emailVerified === false){
+    history.push('/notverified')
+  }
+
   return ( 
   <div className="m-4">
     <p className="text-xl text-bold">List of Events</p>

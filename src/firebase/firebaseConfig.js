@@ -2,6 +2,7 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/storage'
 import 'firebase/database'
+import 'firebase/firestore'
 
 const app = firebase.initializeApp(
   {
@@ -18,4 +19,6 @@ const app = firebase.initializeApp(
 export const projectStorage = app.storage()
 export const databaseStorage = app.database()
 export const auth = app.auth()
+export const firestore = firebase.firestore
+export const { FieldValue } = firebase.firestore
 export default app

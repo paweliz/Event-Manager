@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
 import { projectStorage } from '../firebase/firebaseConfig'
+import { uuid } from 'uuidv4';
 
-const useStorage = (file, title) => {
+const useStorage = (file, filename) => {
   const [progress, setProgress] = useState(0)  
   const [error, setError] = useState(null)  
   const [url, setUrl] = useState(null)
-
   useEffect(()=>{
     if(!file){
        return
     }
-    const storageRef = projectStorage.ref((Math.floor(Math.random() * (100000000 - 1)) + 1) + title +'_'+file.name)
+    const storageRef = projectStorage.ref(filename)
     storageRef.put(file).on('state_changed', (snap) => {
       let percentage = (snap.bytesTransferred/snap.totalBytes * 100)
       setProgress(percentage)
