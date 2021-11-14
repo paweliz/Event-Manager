@@ -1,4 +1,4 @@
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Navbar from './Navbar';
 import Home from './Home';
 import NotFound from './NotFound';
@@ -6,7 +6,7 @@ import Create from './Create';
 import EventsListPage from './EventsListPage';
 import SignUp from './SignUp';
 import Login from './Login';
-import {AuthProvider} from './customHooks/AuthContext';
+import { AuthProvider } from './customHooks/AuthContext';
 import ForgotPassword from './ForgotPassword';
 import UpdateProfile from './UpdateProfile';
 import EventsDetails from './EventsDetails';
@@ -19,6 +19,7 @@ import ChangePassword from './ChangePassword';
 import UpdateEmail from './UpdateEmail';
 import UserPreview from './UserPreview';
 import NearYou from './NearYou';
+import ProtectedRoute from './ProtectedRoute';
 
 function App() {
   return (
@@ -38,44 +39,44 @@ function App() {
               <Route path="/events">
                 <EventsListPage />
               </Route>
-              <Route path="/myevents">
+              <ProtectedRoute path="/myevents">
                 <MyEvents />
-              </Route>
-              <Route path="/updateevent/:id">
+              </ProtectedRoute>
+              <ProtectedRoute path="/updateevent/:id">
                 <UpdateEvent />
-              </Route>
-              <Route path="/create">
+              </ProtectedRoute>
+              <ProtectedRoute path="/create">
                 <Create />
-              </Route>
+              </ProtectedRoute>
               <Route path="/signup">
                 <SignUp />
               </Route>
               <Route path="/login">
                 <Login />
               </Route>
-              <Route path="/forgotpassword">
+              <ProtectedRoute path="/forgotpassword">
                 <ForgotPassword />
-              </Route>
-              <Route path="/updateprofile">
+              </ProtectedRoute>
+              <ProtectedRoute path="/updateprofile">
                 <UpdateProfile />
-              </Route>
-              <Route path="/updateemail">
+              </ProtectedRoute>
+              <ProtectedRoute path="/updateemail">
                 <UpdateEmail />
-              </Route>
-              <Route path="/changepassword">
+              </ProtectedRoute>
+              <ProtectedRoute path="/changepassword">
                 <ChangePassword />
-              </Route>
-              <Route path="/verifyemail">
+              </ProtectedRoute>
+              <ProtectedRoute path="/verifyemail">
                 <VerifyEmail />
-              </Route>
+              </ProtectedRoute>
               <Route path="/notverified">
                 <EmailNotVerified />
               </Route>
-              <Route path="/user/:id">
-                <UserPreview/>
-              </Route>
+              <ProtectedRoute path="/user/:id">
+                <UserPreview />
+              </ProtectedRoute>
               <Route path="/nearyou">
-                <NearYou/>
+                <NearYou />
               </Route>
               <Route path="*">
                 <NotFound />

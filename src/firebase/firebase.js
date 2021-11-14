@@ -1,8 +1,12 @@
-import {app, firestore} from './firebaseConfig';
+import { db, firestore } from './firebaseConfig';
+import { query, collection, where, getDocs } from 'firebase/firestore';
+// import app from './firebaseConfig';
+
+// const db = getFirestore(app);
 
 export const getUserByUserId = async userId => {
   const result = await firestore()
-    ?.collection('users')
+    .collection('users')
     ?.where('userId', '==', userId)
     ?.get();
 
@@ -29,6 +33,33 @@ export const updateUserEvents = async (docId, event, events, eventId) => {
     });
 };
 
+export const updateUserAttendingEvents = async (docId, events, eventId) => {
+  return firestore()
+    .collection('users')
+    .doc(docId)
+    .update({
+      attendingEvents: [...(events && events), eventId],
+    });
+};
+
+export const leaveAttendingUserEvents = async (docId, events) => {
+  return firestore()
+    .collection('users')
+    .doc(docId)
+    .update({
+      attendingEvents: [...events],
+    });
+};
+
+export const deleteUserEvent = async (docId, events, eventId) => {
+  const returnEvents = events?.filter(event => {
+    return event !== eventId;
+  });
+  return firestore().collection('users').doc(docId).update({
+    events: returnEvents,
+  });
+};
+
 export const getCollection = async (collection, setData) => {
   return firestore()
     .collection(collection)
@@ -37,7 +68,7 @@ export const getCollection = async (collection, setData) => {
       const dataList = [];
       data.forEach(doc => {
         let id = doc.id;
-        dataList.push({...doc.data(), id});
+        dataList.push({ ...doc.data(), id });
       });
       setData(dataList);
     });
@@ -87,19 +118,56 @@ export const processSortedCollection = async (
   const dataList = [];
   firestoreCollection.forEach(doc => {
     let id = doc.id;
-    dataList.push({...doc.data(), id});
+    dataList.push({ ...doc.data(), id });
   });
   return setData(dataList);
 };
 
+export const getEventById = async id => {
+  const result = await firestore().collection('events')?.doc(id)?.get();
+  const eventData = [];
+  eventData.push({ ...result.data(), id });
+  return eventData;
+};
+
 export const getCollectionById = async (collection, setData, id) => {
   return firestore()
-    ?.collection(collection)
+    .collection(collection)
     ?.doc(id)
     ?.get()
     .then(data => {
       setData(data.data());
     });
+};
+
+export const getFilteredEvents = async (
+  setData,
+  category,
+  date,
+  endDate,
+  maxParticipants,
+) => {
+  const q = query(
+    collection(db, 'events'),
+    category
+      ? where('category', '==', category)
+      : where('querable', '==', true),
+    date ? where('date', '==', date) : where('querable', '==', true),
+    endDate ? where('endDate', '==', endDate) : where('querable', '==', true),
+    maxParticipants
+      ? where('maxParticipants', '==', maxParticipants)
+      : where('querable', '==', true),
+  );
+  const docsSnap = await getDocs(q).then(docsSnap => {
+    const dataList = [];
+    docsSnap.forEach(doc => {
+      let id = doc.id;
+      console.log(doc.data());
+      dataList.push({ ...doc.data(), id });
+    });
+    setData(dataList);
+  });
+  return docsSnap;
 };
 
 export const getCollectionByGivenParam = async (
@@ -116,7 +184,7 @@ export const getCollectionByGivenParam = async (
       const dataList = [];
       data.forEach(doc => {
         let id = doc.id;
-        dataList.push({...doc.data(), id});
+        dataList.push({ ...doc.data(), id });
       });
       setData(dataList);
     });
@@ -142,4 +210,8 @@ export const removeFromEventParticipants = async (docId, participants) => {
 
 export const deleteEvent = async docId => {
   return firestore().collection('events').doc(docId).delete();
+};
+
+export const deleteImageFromStorage = async urlRef => {
+  return urlRef.delete();
 };

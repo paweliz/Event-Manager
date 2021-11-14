@@ -1,40 +1,93 @@
-import { getCollectionByGivenParam } from './firebase/firebase'
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom"
-import { useAuth } from "./customHooks/AuthContext"
-import { useHistory } from "react-router-dom"
+import {
+  getCollectionByGivenParam,
+  getEventById,
+  getUserByUserId,
+} from './firebase/firebase';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from './customHooks/AuthContext';
+import { useHistory } from 'react-router-dom';
+import EventsListComponent from './EventsListComponent';
 
 const MyEvents = () => {
-  const [events, setEvents] = useState([])
-  const { currentUser } = useAuth()
-  const history = useHistory()
+  const [events, setEvents] = useState([]);
+  const { currentUser } = useAuth();
+  const history = useHistory();
+  const [activeButton, setActiveButton] = useState('left');
+  const [user, setUser] = useState([]);
 
-  useEffect(()=>{
-    getCollectionByGivenParam('events', setEvents, 'author', currentUser.uid)
-  },[])
-
-  if(currentUser?.emailVerified === false){
-    history.push('/notverified')
+  if (currentUser?.emailVerified === false) {
+    history.push('/notverified');
   }
 
-  return ( 
-  <div className="m-4">
-    <p className="text-xl text-bold">List of Events</p>
-    <div className="mt-8 grid lg:grid-cols-3 gap-10">
-    {events.map(event => (
-      <div className="group rounded overflow-hidden hover:shadow-md transform hover:scale-105 hover:-translate-y-1 border hover:border-0" key={event.id}>
-          <Link to={`/events/${event.id}`}>
-          {event.image ? <img className="w-full h-32 object-cover filter grayscale group-hover:filter-none" src={event.image} alt={event.title +' image'}/> : <div className="w-full h-32 object-cover border-b-2 group-hover:border-transparent"><center>No image for this event</center></div>}
-          <div className="p-4 border-t-2 border-transparent group-hover:border-black">
-          <h2 className="text-center text-xl font-bold text-black">{ event.title }</h2>
-          <p className="block text-sm">Organized by { event.organizer }</p>
-          </div>
-          </Link>
-        </div>
-      ))}
-   </div>
-  </div> 
+  useEffect(() => {
+    const getUser = async () => {
+      const [user] = await getUserByUserId(currentUser.uid);
+      user && setUser(user);
+    };
+    currentUser?.uid && getUser();
+  }, [currentUser]);
+
+  const getUserAttendingEvents = async () => {
+    if (user?.attendingEvents?.length !== 0) {
+      return Promise.all(
+        user?.attendingEvents?.map(eventId => getEventById(eventId)),
+      );
+    }
+  };
+  const eventsHandler = async () => {
+    setActiveButton('right');
+    getUserAttendingEvents().then(events => {
+      let tmpEvents = [];
+      events.forEach(event => {
+        tmpEvents.push(event[0]);
+      });
+      console.log(tmpEvents);
+      setEvents(tmpEvents);
+    });
+  };
+
+  useEffect(() => {
+    if (activeButton === 'left') {
+      getCollectionByGivenParam('events', setEvents, 'author', currentUser.uid);
+      return;
+    }
+  }, [activeButton]);
+
+  return (
+    <div className="m-4">
+      {/* <p className="text-xl text-bold">List of Events</p> */}
+      <button
+        className={
+          activeButton === 'left'
+            ? `self-center py-2 px-3 mt-3 border-2 shadow shadow-lg bg-black text-white border-black tracking-wider transform scale-105`
+            : `self-center py-2 px-3 mt-3 border-2 bg-gray-200 shadow  tracking-wider`
+        }
+        onClick={() => setActiveButton('left')}>
+        Created
+      </button>
+      <button
+        className={
+          activeButton === 'right'
+            ? `self-center py-2 px-3 mt-3 border-2 shadow shadow-lg bg-black text-white border-black tracking-wider transform scale-105`
+            : `self-center py-2 px-3 mt-3 bosrder-2 bg-gray-200 shadow  tracking-wider`
+        }
+        onClick={() => eventsHandler()}>
+        Taking part
+      </button>
+      {events?.length > 0 ? (
+        <EventsListComponent
+          withTitle={false}
+          events={events}
+          sortable={false}
+        />
+      ) : activeButton === 'left' ? (
+        <p>You have not created any events yet...</p>
+      ) : (
+        <p>You are not taking part in any events yet...</p>
+      )}
+    </div>
   );
-}
- 
+};
+
 export default MyEvents;

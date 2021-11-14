@@ -1,7 +1,7 @@
-import {useRef, useState, useEffect} from 'react';
-import {useAuth} from './customHooks/AuthContext';
-import {Link, useHistory} from 'react-router-dom';
-import {getUserByUserId, updateAvatarUrl} from './firebase/firebase';
+import { useRef, useState, useEffect } from 'react';
+import { useAuth } from './customHooks/AuthContext';
+import { Link, useHistory } from 'react-router-dom';
+import { getUserByUserId, updateAvatarUrl } from './firebase/firebase';
 import useStorage from './customHooks/useStorage';
 import ReactModal from 'react-modal';
 import Modal from './Modal';
@@ -10,7 +10,7 @@ const UpdateProfile = () => {
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
-  const {currentUser, updatePassword, updateEmail} = useAuth();
+  const { currentUser, updatePassword, updateEmail } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const history = useHistory();
@@ -20,7 +20,7 @@ const UpdateProfile = () => {
   const [openModal, setOpenModal] = useState(false);
   const imgTypes = ['image/png', 'image/jpeg'];
 
-  const {url, progress} = useStorage(file, `avatars/${currentUser?.uid}`);
+  const { url, progress } = useStorage(file, `avatars/${currentUser?.uid}`);
 
   const handleImageChange = e => {
     let selected = e.target.files[0];
@@ -37,10 +37,8 @@ const UpdateProfile = () => {
 
   useEffect(() => {
     const updateAvatar = async () => {
-      console.log('updateAvatar', user?.docId);
       await updateAvatarUrl(user?.docId, url);
     };
-    console.log('URL in useEffexct', url);
     url && updateAvatar();
   }, [url]);
 
@@ -53,13 +51,9 @@ const UpdateProfile = () => {
     currentUser && getUser();
   }, [currentUser]);
 
-  console.log(user?.docId);
-
   function handleSubmit(e) {
     e.preventDefault();
-    console.log('submit');
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-      console.log(passwordRef.current.value, passwordConfirmRef.current.value);
       return setError('Passwords do not match');
     }
 
@@ -81,11 +75,6 @@ const UpdateProfile = () => {
       .finally(() => {
         setLoading(false);
       });
-  }
-
-  if (currentUser === null) {
-    history.push('/login');
-    return null;
   }
 
   return (

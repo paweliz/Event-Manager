@@ -1,20 +1,20 @@
-import {useEffect, useState} from 'react';
-import {useAuth} from './customHooks/AuthContext';
-import {useHistory} from 'react-router-dom';
-import {databaseStorage} from './firebase/firebaseConfig';
+import { useEffect, useState } from 'react';
+import { useAuth } from './customHooks/AuthContext';
+import { useHistory } from 'react-router-dom';
+import { databaseStorage } from './firebase/firebaseConfig';
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from 'react-places-autocomplete';
 import useStorage from './customHooks/useStorage';
-import {uuid} from 'uuidv4';
-import {firestore} from './firebase/firebaseConfig';
-import {getUserByUserId, updateUserEvents} from './firebase/firebase';
+import { uuid } from 'uuidv4';
+import { firestore } from './firebase/firebaseConfig';
+import { getUserByUserId, updateUserEvents } from './firebase/firebase';
 import DateTimePicker from 'react-datetime-picker';
-import moment from "moment";
+import moment from 'moment';
 
 const Create = () => {
-  const {currentUser} = useAuth();
+  const { currentUser } = useAuth();
   const history = useHistory();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -25,15 +25,18 @@ const Create = () => {
     lng: null,
   });
   const [date, setDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [image, setImage] = useState(null);
+  const [imageLoading, setImageLoading] = useState(false);
   const [file, setFile] = useState(null);
   const [imgError, setImgError] = useState(null);
   const [category, setCategory] = useState('Arts');
   const [maxParticipants, setMaxParticipants] = useState(1);
   const imgTypes = ['image/png', 'image/jpeg'];
   const uuId = uuid();
-  const {url, progress} = useStorage(file, `events/${uuId}`);
+  const { url, progress } = useStorage(file, `events/${uuId}`);
   const [user, setUser] = useState(null);
+  const querable = true;
 
   useEffect(() => {
     const getUser = async () => {
@@ -48,27 +51,25 @@ const Create = () => {
   const organizer = user?.fullName;
   const author = currentUser?.uid;
   const additionDate = Date.now();
-  //console.log(author, additionDate)
 
   useEffect(() => {
     setImage(url);
+    setImageLoading(false);
   }, [url]);
 
-  if (currentUser === null) {
-    history.push('/login');
-    return null;
-  }
   if (currentUser?.emailVerified === false) {
     history.push('/notverified');
   }
 
   const handleImageChange = e => {
     let selected = e.target.files[0];
+    setImageLoading(true);
     if (selected && imgTypes.includes(selected.type)) {
       setFile(selected);
       setImgError('');
     } else {
       setFile(null);
+      setImageLoading(false);
       setImgError(
         'Selected invalid format of file. Please select png or jpeg.',
       );
@@ -83,7 +84,6 @@ const Create = () => {
   };
 
   const createEvent = async () => {
-    const eventRef = databaseStorage.ref('Event');
     const event = {
       title,
       participants,
@@ -93,21 +93,24 @@ const Create = () => {
       location,
       coordinates,
       date,
+      endDate,
       image,
       category,
       author,
       additionDate,
+      querable,
     };
     try {
       //eventRef.push(event);
       firestore()
         .collection('events')
         .add(event)
-        .then((doc) => updateUserEvents(user?.docId, event, user?.events, doc.id));
+        .then(doc =>
+          updateUserEvents(user?.docId, event, user?.events, doc.id),
+        );
     } catch (e) {
       console.log('error', e.message);
     } finally {
-      //console.log(event)
       history.push('/');
     }
   };
@@ -138,7 +141,7 @@ const Create = () => {
               type="number"
               min="1"
               value={maxParticipants}
-              onChange={e => setMaxParticipants(parseInt(e.target.value,10))}
+              onChange={e => setMaxParticipants(parseInt(e.target.value, 10))}
               required
             />
           </div>
@@ -158,7 +161,7 @@ const Create = () => {
                   <div>
                     <input
                       className="border-b-2 hover:border-black focus:border-black focus:outline-none"
-                      {...getInputProps({placeholder: 'Type location'})}
+                      {...getInputProps({ placeholder: 'Type location' })}
                     />
                     <div>
                       {loading ? <div>...loading</div> : null}
@@ -171,7 +174,8 @@ const Create = () => {
                         };
 
                         return (
-                          <div {...getSuggestionItemProps(suggestion, {style})}>
+                          <div
+                            {...getSuggestionItemProps(suggestion, { style })}>
                             {suggestion.description}
                           </div>
                         );
@@ -183,7 +187,7 @@ const Create = () => {
             </PlacesAutocomplete>
           </div>
           <div className="flex flex-col">
-            <label>Date:</label>
+            <label>Start date:</label>
             <DateTimePicker
               className="cursor-pointer border-b-2 hover:border-black focus:border-black focus:outline-none"
               // type="date"
@@ -193,6 +197,19 @@ const Create = () => {
               disableClock={true}
             />
           </div>
+          {date !== '' && (
+            <div className="flex flex-col">
+              <label>End date:</label>
+              <DateTimePicker
+                className="cursor-pointer border-b-2 hover:border-black focus:border-black focus:outline-none"
+                // type="date"
+                value={endDate}
+                minDate={date}
+                onChange={e => setEndDate(e)}
+                disableClock={true}
+              />
+            </div>
+          )}
           <div className="flex flex-col">
             <label>Image of the event:</label>
             <input
@@ -230,9 +247,11 @@ const Create = () => {
             onChange={e => setDescription(e.target.value)}
           />
         </div>
-        <button className="self-center py-2 px-3 mt-3 border-2 bg-gray-200 shadow hover:shadow-lg hover:bg-black hover:text-white hover:border-black tracking-wider transform hover:scale-105">
-          Submit
-        </button>
+        {!imageLoading && (
+          <button className="self-center py-2 px-3 mt-3 border-2 bg-gray-200 shadow hover:shadow-lg hover:bg-black hover:text-white hover:border-black tracking-wider transform hover:scale-105">
+            Submit
+          </button>
+        )}
       </form>
     </div>
   );

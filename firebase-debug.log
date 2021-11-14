@@ -236,3 +236,51 @@
 [debug] [2021-10-12T18:21:10.544Z] [worker-us-central1-createEvent-72a78bd0-b87d-4ce4-8d41-f47fe88497a9]: exited {"metadata":{"emulator":{"name":"functions"},"message":"[worker-us-central1-createEvent-72a78bd0-b87d-4ce4-8d41-f47fe88497a9]: exited"}}
 [debug] [2021-10-12T18:21:10.556Z] [worker-us-central1-createEvent-72a78bd0-b87d-4ce4-8d41-f47fe88497a9]: FINISHED {"metadata":{"emulator":{"name":"functions"},"message":"[worker-us-central1-createEvent-72a78bd0-b87d-4ce4-8d41-f47fe88497a9]: FINISHED"}}
 [debug] [2021-10-12T18:21:10.560Z] [worker-~diagnostic~-ed8f2a7a-ec37-4cf2-8aee-1cce1e4395e4]: exited {"metadata":{"emulator":{"name":"functions"},"message":"[worker-~diagnostic~-ed8f2a7a-ec37-4cf2-8aee-1cce1e4395e4]: exited"}}
+[debug] [2021-11-14T14:34:04.929Z] ----------------------------------------------------------------------
+[debug] [2021-11-14T14:34:04.932Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\lizoo\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js ext:install firebase/firestore-send-email --project=event-manager-dev-80150
+[debug] [2021-11-14T14:34:04.932Z] CLI Version:   9.20.0
+[debug] [2021-11-14T14:34:04.932Z] Platform:      win32
+[debug] [2021-11-14T14:34:04.932Z] Node Version:  v16.4.0
+[debug] [2021-11-14T14:34:04.937Z] Time:          Sun Nov 14 2021 15:34:04 GMT+0100 (czas środkowoeuropejski standardowy)
+[debug] [2021-11-14T14:34:04.937Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-11-14T14:34:04.940Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2021-11-14T14:34:05.015Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-11-14T14:34:05.015Z] > authorizing via signed-in user (lizoo1999@gmail.com)
+[debug] [2021-11-14T14:34:05.015Z] [iam] checking project event-manager-dev-80150 for permissions ["firebase.projects.get","firebaseextensions.instances.create"]
+[debug] [2021-11-14T14:34:05.017Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-11-14T14:34:05.017Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-11-14T14:34:05.117Z] <<< HTTP RESPONSE 200 {"expires":"Mon, 01 Jan 1990 00:00:00 GMT","cache-control":"no-cache, no-store, max-age=0, must-revalidate","pragma":"no-cache","date":"Sun, 14 Nov 2021 14:34:04 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"clear","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-11-14T14:34:05.125Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/event-manager-dev-80150:testIamPermissions  
+ {"permissions":["firebase.projects.get","firebaseextensions.instances.create"]}
+[debug] [2021-11-14T14:34:05.433Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2021-11-14T14:34:05.433Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2021-11-14T14:34:05.902Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 14 Nov 2021 14:34:05 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=694","alt-svc":"clear","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  extensions: ensuring required API firebaseextensions.googleapis.com is enabled... 
+[debug] [2021-11-14T14:34:05.904Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/event-manager-dev-80150/services/firebaseextensions.googleapis.com  
+ 
+[debug] [2021-11-14T14:34:06.821Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 14 Nov 2021 14:34:06 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"clear","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] +  extensions: required API firebaseextensions.googleapis.com is enabled 
+[debug] [2021-11-14T14:34:06.823Z] >>> HTTP REQUEST GET https://firebaseextensions.googleapis.com/v1beta/publishers/firebase/extensions/firestore-send-email  
+ 
+[debug] [2021-11-14T14:34:07.657Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 14 Nov 2021 14:34:06 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"clear","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-11-14T14:34:07.658Z] >>> HTTP REQUEST GET https://firebaseextensions.googleapis.com/v1beta/publishers/firebase/extensions/firestore-send-email/versions/latest  
+ 
+[debug] [2021-11-14T14:34:08.486Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 14 Nov 2021 14:34:07 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"clear","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  extensions: information about 'firebase/firestore-send-email@latest': 
+[info] Name: Trigger Email
+Publisher: firebase
+Description: Composes and sends an email based on the contents of a document written to a specified Cloud Firestore collection.
+License: Apache-2.0
+Source code: https://github.com/firebase/extensions/tree/master/firestore-send-email
+
+[debug] [2021-11-14T14:34:08.498Z] >>> HTTP REQUEST GET https://extensions-registry.firebaseapp.com/extensions.json  
+ 
+[debug] [2021-11-14T14:34:08.623Z] <<< HTTP RESPONSE 200 {"connection":"keep-alive","content-length":"46877","access-control-allow-origin":"*","cache-control":"max-age=3600","content-type":"application/json","etag":"\"5a0ad8c49b7aed19e806347e180a7177190b1200637ffb64f014b8ec1fe39405\"","last-modified":"Wed, 10 Nov 2021 03:18:59 GMT","strict-transport-security":"max-age=31556926; includeSubDomains; preload","accept-ranges":"bytes","date":"Sun, 14 Nov 2021 14:34:07 GMT","x-served-by":"cache-fra19162-FRA","x-cache":"HIT","x-cache-hits":"1","x-timer":"S1636900448.885527,VS0,VE1","vary":"x-fh-requested-host, accept-encoding"}
+[debug] [2021-11-14T14:34:17.412Z] >>> HTTP REQUEST GET https://cloudbilling.googleapis.com/v1/projects/event-manager-dev-80150/billingInfo  
+ 
+[debug] [2021-11-14T14:34:18.277Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 14 Nov 2021 14:34:17 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"clear","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-11-14T14:34:18.278Z] >>> HTTP REQUEST GET https://cloudbilling.googleapis.com/v1/billingAccounts  
+ 
+[debug] [2021-11-14T14:34:19.121Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 14 Nov 2021 14:34:18 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"clear","accept-ranges":"none","transfer-encoding":"chunked"}
