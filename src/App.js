@@ -61,9 +61,9 @@ function App() {
               <Route path="/login">
                 <Login />
               </Route>
-              <ProtectedRoute path="/forgotpassword">
+              <Route path="/forgotpassword">
                 <ForgotPassword />
-              </ProtectedRoute>
+              </Route>
               <ProtectedRoute path="/updateprofile">
                 <UpdateProfile />
               </ProtectedRoute>
