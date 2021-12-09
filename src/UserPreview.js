@@ -25,8 +25,8 @@ const UserPreview = () => {
     // user &&
   }, []);
   return (
-    <div>
-      <div>
+    <div className="ml-4">
+      <div className="flex flex-row">
         {userDetails?.avatarUrl ? (
           <img
             className="rounded-full w-20 h-20"
@@ -36,11 +36,15 @@ const UserPreview = () => {
         ) : (
           <div className="rounded-full w-20 h-20 bg-black" />
         )}
-        <h2>{userDetails.fullName}</h2>
-        <p>Account created {moment(userDetails.dateCreated).fromNow()}</p>
-        {userDetails?.events?.length > 0 && (
-          <p>Total events: {userDetails?.events.length}</p>
-        )}
+        <div className="flex ml-4 flex-col">
+          <h2>
+            <b>{userDetails.fullName}</b>
+          </h2>
+          <p>Account created: {moment(userDetails.dateCreated).fromNow()}</p>
+          {userDetails?.events?.length > 0 && (
+            <p>Created events: {userDetails?.events.length}</p>
+          )}
+        </div>
       </div>
       <EventsListComponent events={userEvents} sortable={false} title={false} />
     </div>

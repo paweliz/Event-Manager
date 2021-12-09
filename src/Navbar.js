@@ -1,14 +1,18 @@
 import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from './customHooks/AuthContext';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { getUserByUserId } from './firebase/firebase';
+import { useLocation } from 'react-router-dom';
 
-const Navbar = () => {
+const Navbar = ({ navbarVisible, setNavbarVisible }) => {
   const { currentUser, logout } = useAuth();
-  const [modal, setModal] = useState('disabled');
+  const [modal, setModal] = useState(false);
   const [error, setError] = useState('');
   const [user, setUser] = useState(null);
   const history = useHistory();
+  const ref = useRef();
+  const location = useLocation();
+  console.log(location, location?.pathname === '/');
 
   useEffect(() => {
     const getUser = async () => {
@@ -21,7 +25,7 @@ const Navbar = () => {
 
   async function handleLogout() {
     setError('');
-
+    setModal(false);
     try {
       await logout();
       history.push('/');
@@ -30,77 +34,77 @@ const Navbar = () => {
     }
   }
 
+  useEffect(() => {
+    const checkIfClickedOutside = e => {
+      if (modal && ref.current && !ref.current.contains(e.target)) {
+        setModal(false);
+      }
+    };
+    document.addEventListener('click', checkIfClickedOutside);
+    return () => {
+      // Cleanup the event listener
+      document.removeEventListener('click', checkIfClickedOutside);
+    };
+  }, [modal]);
+
   const handleClick = () => {
-    if (modal === 'enabled') {
-      setModal('disabled');
+    if (modal) {
+      setModal(false);
     }
-    if (modal === 'disabled') {
-      setModal('enabled');
+    if (!modal) {
+      setModal(true);
     }
   };
 
   return (
-    <nav className="navbar w-screen flex flex-wrap items-center bg-transparent grid-cols-3 grid-rows-3">
-      <h1 className="bg-transparent col-start-1	row-start-1 p-5 text-xl text-black">
-        Event manager
-      </h1>
-      <div className="links flex flex-row w-screen">
-        <Link to="/" className="navtab">
-          Home
-        </Link>
-        <Link to="/events" className="navtab">
-          All events
-        </Link>
-        <Link to="/nearyou" className="navtab">
-          Near you
-        </Link>
-        {currentUser !== null && (
-          <Link to="/myevents" className="navtab">
-            My events
-          </Link>
-        )}
-        {currentUser !== null && (
-          <Link to="/create" className="navtab">
-            Add event
-          </Link>
-        )}
-        {currentUser === null && (
-          <Link to="/signup" className="navtab">
-            Sign Up
-          </Link>
-        )}
-        {currentUser === null && (
-          <Link to="/login" className="navtab">
-            Login
-          </Link>
-        )}
-        {currentUser !== null && (
-          <div className="relative">
+    <nav className="navbar w-screen flex flex-col items-center bg-transparent fixed top-0 z-20 ">
+      <div className="flex flex-row self-start items-center justify-between w-screen shadow-md border-b-2 border-orange">
+        <h1 className="bg-transparent p-5 text-xl text-black">Event manager</h1>
+        <div
+          className="self-end justify-self-center "
+          onClick={() => setNavbarVisible(!navbarVisible)}>
+          <svg
+            className={
+              navbarVisible
+                ? 'w-6 h-6 bg-transparent stroke-current transform rotate-180'
+                : 'w-6 h-6 bg-transparent stroke-current'
+            }
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </div>
+        {currentUser !== null ? (
+          <div className="relative mr-4 bg-transparent">
             <button
-              className="group relative navtab focus:outline-none"
+              className="group relative focus:outline-none"
               onClick={handleClick}>
               {user?.avatarUrl ? (
                 <img
-                  className="rounded-full w-6 h-6 mx-3"
+                  className="rounded-full w-10 h-10 border border-black bg-transparent"
                   alt="avatar"
                   src={user.avatarUrl}
                 />
               ) : (
-                <svg
-                  className="w-6 h-6 bg-transparent mx-3 stroke-current group-hover:stroke-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
+                <p className="text-orange">
+                  <svg
+                    className="w-10 h-10 bg-transparent stroke-current"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      strokeWidth="2"
+                      d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </p>
               )}
             </button>
-            {modal === 'enabled' && (
-              <div className="absolute right-0 z-20 w-48 bg-white rounded-md shadow-xl dark:bg-gray-800">
+            {modal && (
+              <div
+                className="absolute right-0 z-20 top-15 md:w-48 -mr-4 border-t-2 border-orange bg-white rounded-md shadow-xl dark:bg-gray-800 w-screen"
+                ref={ref}>
                 <div className="p-3">
                   <h2>Hello, </h2>
                   {error && <div>{error}</div>}
@@ -110,19 +114,92 @@ const Navbar = () => {
                 </div>
                 <Link
                   to="/updateprofile"
-                  className="block px-4 py-2 text-sm text-black capitalize transition-colors duration-200 transform hover:bg-black hover:text-white dark:hover:text-white">
+                  onClick={() => setModal(false)}
+                  className="block px-4 py-2 text-sm text-black capitalize transition-colors duration-200 transform hover:bg-orange hover:text-white dark:hover:text-white">
                   Update Profile
                 </Link>
                 <div
-                  className="block px-4 py-2 text-sm text-black cursor-pointer capitalize transition-colors duration-200 transform hover:bg-black hover:text-white dark:hover:text-white"
+                  className="block px-4 py-2 text-sm text-black cursor-pointer capitalize transition-colors duration-200 transform hover:bg-orange hover:text-white dark:hover:text-white"
                   onClick={handleLogout}>
                   Log Out
                 </div>
               </div>
             )}
           </div>
+        ) : (
+          <div>
+            <svg
+              className="w-10 h-10 bg-transparent"
+              fill="none"
+              stroke="none"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                strokeWidth="2"
+                d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
         )}
       </div>
+      {navbarVisible && (
+        <div className="links flex flex-row w-screen">
+          <Link
+            to="/"
+            className={location?.pathname === '/' ? 'activeTab' : 'navtab'}>
+            Home
+          </Link>
+          <Link
+            to="/events"
+            className={
+              location?.pathname === '/events' ? 'activeTab' : 'navtab'
+            }>
+            All events
+          </Link>
+          <Link
+            to="/nearyou"
+            className={
+              location?.pathname === '/nearyou' ? 'activeTab' : 'navtab'
+            }>
+            Near you
+          </Link>
+          {currentUser !== null && (
+            <Link
+              to="/myevents"
+              className={
+                location?.pathname === '/myevents' ? 'activeTab' : 'navtab'
+              }>
+              My events
+            </Link>
+          )}
+          {currentUser !== null && (
+            <Link
+              to="/create"
+              className={
+                location?.pathname === '/create' ? 'activeTab' : 'navtab'
+              }>
+              Add event
+            </Link>
+          )}
+          {currentUser === null && (
+            <Link
+              to="/signup"
+              className={
+                location?.pathname === '/signup' ? 'activeTab' : 'navtab'
+              }>
+              Sign Up
+            </Link>
+          )}
+          {currentUser === null && (
+            <Link
+              to="/login"
+              className={
+                location?.pathname === '/login' ? 'activeTab' : 'navtab'
+              }>
+              Login
+            </Link>
+          )}
+        </div>
+      )}
     </nav>
   );
 };

@@ -37,26 +37,26 @@ const EventsListPage = () => {
   };
 
   return (
-    <>
-      <FilterComponent
-        maxParticipants={maxParticipants}
-        setMaxParticipants={setMaxParticipants}
-        date={date}
-        setDate={setDate}
-        endDate={endDate}
-        setEndDate={setEndDate}
-        category={category}
-        setCategory={setCategory}
-        submit={submitHandler}
-      />
+    <div className="m-4">
       {events?.length > 0 && (
         <EventsListComponent
           events={events}
           setSortBy={setSortBy}
-          sortBy={sortBy}
-        />
+          sortBy={sortBy}>
+          <FilterComponent
+            maxParticipants={maxParticipants}
+            setMaxParticipants={setMaxParticipants}
+            date={date}
+            setDate={setDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            category={category}
+            setCategory={setCategory}
+            submit={submitHandler}
+          />
+        </EventsListComponent>
       )}
-    </>
+    </div>
   );
 };
 

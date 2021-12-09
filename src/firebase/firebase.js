@@ -24,6 +24,12 @@ export const updateAvatarUrl = async (docId, url) => {
   });
 };
 
+export const updateFullName = async (docId, fullName) => {
+  return firestore().collection('users').doc(docId).update({
+    fullName: fullName,
+  });
+};
+
 export const updateUserEvents = async (docId, event, events, eventId) => {
   return firestore()
     .collection('users')

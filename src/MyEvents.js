@@ -57,24 +57,26 @@ const MyEvents = () => {
   return (
     <div className="m-4">
       {/* <p className="text-xl text-bold">List of Events</p> */}
-      <button
-        className={
-          activeButton === 'left'
-            ? `self-center py-2 px-3 mt-3 border-2 shadow shadow-lg bg-black text-white border-black tracking-wider transform scale-105`
-            : `self-center py-2 px-3 mt-3 border-2 bg-gray-200 shadow  tracking-wider`
-        }
-        onClick={() => setActiveButton('left')}>
-        Created
-      </button>
-      <button
-        className={
-          activeButton === 'right'
-            ? `self-center py-2 px-3 mt-3 border-2 shadow shadow-lg bg-black text-white border-black tracking-wider transform scale-105`
-            : `self-center py-2 px-3 mt-3 bosrder-2 bg-gray-200 shadow  tracking-wider`
-        }
-        onClick={() => eventsHandler()}>
-        Taking part
-      </button>
+      <div className="ml-1">
+        <button
+          className={
+            activeButton === 'left'
+              ? 'activeMyEventsButton'
+              : 'inactiveMyEventsButton'
+          }
+          onClick={() => setActiveButton('left')}>
+          Created
+        </button>
+        <button
+          className={
+            activeButton === 'right'
+              ? 'activeMyEventsButton'
+              : 'inactiveMyEventsButton'
+          }
+          onClick={eventsHandler}>
+          Taking part
+        </button>
+      </div>
       {events?.length > 0 ? (
         <EventsListComponent
           withTitle={false}

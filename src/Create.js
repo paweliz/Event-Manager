@@ -9,9 +9,13 @@ import PlacesAutocomplete, {
 import useStorage from './customHooks/useStorage';
 import { uuid } from 'uuidv4';
 import { firestore } from './firebase/firebaseConfig';
-import { getUserByUserId, updateUserEvents } from './firebase/firebase';
+import {
+  getUserByUserId,
+  updateUserEvents,
+  updateUserAttendingEvents,
+} from './firebase/firebase';
 import DateTimePicker from 'react-datetime-picker';
-import moment from 'moment';
+import { resizeFile } from './utils';
 
 const Create = () => {
   const { currentUser } = useAuth();
@@ -37,6 +41,7 @@ const Create = () => {
   const { url, progress } = useStorage(file, `events/${uuId}`);
   const [user, setUser] = useState(null);
   const querable = true;
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const getUser = async () => {
@@ -65,7 +70,9 @@ const Create = () => {
     let selected = e.target.files[0];
     setImageLoading(true);
     if (selected && imgTypes.includes(selected.type)) {
-      setFile(selected);
+      resizeFile(selected, 1200, 1200).then(file => {
+        setFile(file);
+      });
       setImgError('');
     } else {
       setFile(null);
@@ -84,6 +91,27 @@ const Create = () => {
   };
 
   const createEvent = async () => {
+    if (
+      (title === '' ||
+        maxParticipants === 0 ||
+        participants === '' ||
+        location === '' ||
+        coordinates.lng === null ||
+        coordinates.lat === null,
+      date === '' || endDate === '')
+    ) {
+      if (
+        location !== '' &&
+        (coordinates.lng === null || coordinates.lat === null)
+      ) {
+        setError(
+          'You have passed wrong location. Please enter event location properly.',
+        );
+        return;
+      }
+      setError('All fields with asterisk are required');
+      return;
+    }
     const event = {
       title,
       participants,
@@ -102,14 +130,17 @@ const Create = () => {
     };
     try {
       //eventRef.push(event);
+      setError('');
       firestore()
         .collection('events')
         .add(event)
-        .then(doc =>
-          updateUserEvents(user?.docId, event, user?.events, doc.id),
-        );
+        .then(doc => {
+          updateUserEvents(user?.docId, event, user?.events, doc.id);
+          updateUserAttendingEvents(user?.docId, user?.attendingEvents, doc.id);
+        });
     } catch (e) {
       console.log('error', e.message);
+      setError(e.message);
     } finally {
       history.push('/');
     }
@@ -121,11 +152,14 @@ const Create = () => {
   };
 
   return (
-    <div className="mt-5 m-4">
-      <form className="flex flex-col justify-center" onSubmit={handleSubmit}>
-        <div className="mt-8 grid lg:grid-cols-3 gap-10">
+    <div className="mt-5 m-4 max-w-xl flex flex-col justify-center place-content-center ml-auto mr-auto">
+      <div className="flex flex-col justify-center">
+        {error && (
+          <div className="bg-red-500 text-white text-center p-2">{error}</div>
+        )}
+        <div className="mt-8 flex flex-col">
           <div className="flex flex-col">
-            <label>Title:</label>
+            <label>Title*:</label>
             <input
               className="border-b-2 hover:border-black focus:border-black focus:outline-none"
               type="text"
@@ -134,8 +168,8 @@ const Create = () => {
               required
             />
           </div>
-          <div className="flex flex-col">
-            <label>Number of participants:</label>
+          <div className="flex flex-col mt-4">
+            <label>Number of participants*:</label>
             <input
               className="border-b-2 hover:border-black focus:border-black focus:outline-none"
               type="number"
@@ -145,8 +179,8 @@ const Create = () => {
               required
             />
           </div>
-          <div className="flex flex-col">
-            <label>Location:</label>
+          <div className="flex flex-col mt-4">
+            <label>Location*:</label>
             <PlacesAutocomplete
               value={location}
               onChange={/*(e) => setLocation(e.target.value)*/ setLocation}
@@ -160,8 +194,11 @@ const Create = () => {
                 return (
                   <div>
                     <input
-                      className="border-b-2 hover:border-black focus:border-black focus:outline-none"
-                      {...getInputProps({ placeholder: 'Type location' })}
+                      className="border-b-2 hover:border-black focus:border-black focus:outline-none w-full"
+                      {...getInputProps({
+                        placeholder:
+                          'i.e. Politechnika Wrocławska, wybrzeże Stanisława Wyspiańskiego, Wrocław, Polska',
+                      })}
                     />
                     <div>
                       {loading ? <div>...loading</div> : null}
@@ -186,31 +223,52 @@ const Create = () => {
               }}
             </PlacesAutocomplete>
           </div>
-          <div className="flex flex-col">
-            <label>Start date:</label>
+          <div className="flex flex-col mt-4">
+            <label>Category:</label>
+            <select
+              value={category}
+              onChange={e => setCategory(e.target.value)}
+              className="cursor-pointer border-b-2 hover:border-black focus:outline-none focus:border-black">
+              <option value="Arts">Arts</option>
+              <option value="Business">Business</option>
+              <option value="Charity">Charity</option>
+              <option value="Music">Music</option>
+              <option value="Sports">Sports</option>
+            </select>
+          </div>
+          <div className="flex flex-col mt-4">
+            <label>Start date*:</label>
             <DateTimePicker
               className="cursor-pointer border-b-2 hover:border-black focus:border-black focus:outline-none"
               // type="date"
               value={date}
               minDate={new Date()}
-              onChange={e => setDate(e)}
+              onChange={e => {
+                console.log(e);
+                setDate(e);
+              }}
               disableClock={true}
             />
           </div>
-          {date !== '' && (
-            <div className="flex flex-col">
-              <label>End date:</label>
-              <DateTimePicker
-                className="cursor-pointer border-b-2 hover:border-black focus:border-black focus:outline-none"
-                // type="date"
-                value={endDate}
-                minDate={date}
-                onChange={e => setEndDate(e)}
-                disableClock={true}
-              />
-            </div>
-          )}
-          <div className="flex flex-col">
+          {/* {date !== '' && ( */}
+          <div
+            className={
+              date !== ''
+                ? 'flex flex-col mt-4'
+                : 'flex flex-col pointer-events-none opacity-50 mt-4'
+            }>
+            <label>End date*:</label>
+            <DateTimePicker
+              className="cursor-pointer border-b-2 hover:border-black focus:border-black focus:outline-none"
+              // type="date"
+              value={endDate}
+              minDate={date}
+              onChange={e => setEndDate(e)}
+              disableClock={true}
+            />
+          </div>
+          {/* )} */}
+          <div className="flex flex-col mt-4">
             <label>Image of the event:</label>
             <input
               className="cursor-pointer"
@@ -224,19 +282,6 @@ const Create = () => {
                 (progress === 100 ? `Image ${file.name} attached` : progress)}
             </div>
           </div>
-          <div className="flex flex-col">
-            <label>Category:</label>
-            <select
-              value={category}
-              onChange={e => setCategory(e.target.value)}
-              className="cursor-pointer border-b-2 hover:border-black focus:outline-none focus:border-black">
-              <option value="Arts">Arts</option>
-              <option value="Business">Business</option>
-              <option value="Charity">Charity</option>
-              <option value="Music">Music</option>
-              <option value="Sports">Sports</option>
-            </select>
-          </div>
         </div>
         <div className="flex flex-col mt-4">
           <label>Description:</label>
@@ -248,11 +293,20 @@ const Create = () => {
           />
         </div>
         {!imageLoading && (
-          <button className="self-center py-2 px-3 mt-3 border-2 bg-gray-200 shadow hover:shadow-lg hover:bg-black hover:text-white hover:border-black tracking-wider transform hover:scale-105">
-            Submit
-          </button>
+          //<div className="flex self-end">
+          <div className="flex flex-col lg:flex-row-reverse justify-center lg:justify-between">
+            <button className="createEventSubmit" onClick={handleSubmit}>
+              Submit
+            </button>
+            <button
+              className="createEventCancel"
+              onClick={() => history.push('/')}>
+              Cancel
+            </button>
+          </div>
+          //</div>
         )}
-      </form>
+      </div>
     </div>
   );
 };

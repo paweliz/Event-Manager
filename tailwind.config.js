@@ -1,10 +1,19 @@
-const colors = require('tailwindcss/colors')
+const colors = require('tailwindcss/colors');
 
 module.exports = {
   purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    stroke:{
+    inset: {
+      /* prettier-ignore */
+      '0': 0,
+      15: '3.55rem',
+    },
+    stroke: {
+      current: 'currentColor',
+      white: colors.white,
+    },
+    fill: {
       current: 'currentColor',
       white: colors.white,
     },
@@ -20,6 +29,7 @@ module.exports = {
       blue: colors.blue,
     },
     extend: {
+      //prettier-ignore
       colors: {
         'earie-black': '#272727',
         'orange-yellow-crayola': '#fed766',
@@ -35,6 +45,14 @@ module.exports = {
         'deepy-red': '#660708',
         'black-pearl': '#161a1d',
         'cod-gray': '#0b090a',
+        'orange': '#f26419',
+        'lightest-orange' :'#FFBB96',
+        'light-orange': '#FFA371',
+        'light-orange2': '#FD8748',
+        'green': '#10B981',
+        'dark-green': '#009B68',
+        'light-navy': '#33658a',
+        'navy': '#2f4858',
       },
     },
   },
@@ -43,8 +61,8 @@ module.exports = {
       borderWidth: ['hover'],
       stroke: ['hover', 'group-hover'],
       filter: ['hover', 'group-hover'],
+      fontWeight: ['hover'],
     },
   },
   plugins: [],
-}
-
+};

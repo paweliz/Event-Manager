@@ -6,7 +6,7 @@
 /* base styles */
 * {
   margin: 0;
-  font-family: "Quicksand";
+  font-family: 'Quicksand';
   color: #272727;
   background-color: #ffffff;
 }
@@ -17,7 +17,6 @@
   position: relative;
   display: inline-block;
   width: 100%;
-
 }
 
 .datalist-input .autocomplete-input {
@@ -62,9 +61,41 @@
   border-bottom: 1px solid #d4d4d4;
   padding: 10px;
 }
-.datalist-input .autocomplete-input:focus{
+.datalist-input .autocomplete-input:focus {
   outline: none;
 }
 .navtab {
-  @apply transition duration-150 ease-in-out transform hover:-translate-y-1 flex-1 text-center text-earie-black py-3 hover:text-white border-b-2 border-reddy-gray border-l border-r hover:border-black bg-gray-200 hover:bg-black hover:shadow;
+  @apply transition duration-150 ease-in-out transform hover:-translate-y-1 flex-1 text-center text-white py-3 hover:text-white border-b-0 border-light-orange2 hover:border-orange bg-light-orange hover:bg-orange hover:shadow hover:font-semibold;
+}
+
+.activeTab {
+  @apply transition duration-150 ease-in-out transform flex-1 text-center text-white py-3 border-b-0 border-l border-r border-orange bg-orange font-semibold shadow;
+}
+
+.activeMyEventsButton {
+  @apply self-center py-2 px-3 mt-3 border-2 shadow shadow-lg bg-orange text-white border-orange tracking-wider transform scale-105 font-semibold;
+}
+
+.inactiveMyEventsButton {
+  @apply self-center py-2 px-3 mt-3 border-2 bg-gray-200 border-gray-200 shadow tracking-wider;
+}
+
+.submitButton {
+  @apply lg:self-center py-2 px-3 border-2 bg-green border-green shadow hover:shadow-lg hover:bg-dark-green text-white hover:border-green tracking-wider transform hover:scale-105 rounded;
+}
+
+.createEventSubmit {
+  @apply lg:w-56 mt-4 py-2 px-3 border-2 bg-green border-green shadow hover:shadow-lg hover:bg-dark-green text-white hover:border-green tracking-wider transform hover:scale-105 rounded;
+}
+
+.createEventCancel {
+  @apply lg:w-56 mt-4 py-2 px-3 bg-transparent text-torch-red tracking-wider transform hover:scale-105;
+}
+
+.leaveEventBtn {
+  @apply lg:w-44 mt-2 py-2 px-3 border-2 bg-ll-red border-ll-red shadow hover:shadow-lg hover:bg-torch-red text-white hover:border-ll-red tracking-wider transform hover:scale-105 rounded;
+}
+
+.saveGCalBtn {
+  @apply lg:w-44 mt-2 py-2 px-3 mr-2 border-2 bg-light-navy border-light-navy text-xs shadow hover:shadow-lg hover:bg-navy text-white hover:border-light-navy tracking-wider transform hover:scale-105 rounded;
 }

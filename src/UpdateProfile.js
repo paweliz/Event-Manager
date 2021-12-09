@@ -1,10 +1,16 @@
 import { useRef, useState, useEffect } from 'react';
 import { useAuth } from './customHooks/AuthContext';
 import { Link, useHistory } from 'react-router-dom';
-import { getUserByUserId, updateAvatarUrl } from './firebase/firebase';
+import {
+  getUserByUserId,
+  updateAvatarUrl,
+  deleteImageFromStorage,
+} from './firebase/firebase';
+import { projectStorage } from './firebase/firebaseConfig';
 import useStorage from './customHooks/useStorage';
-import ReactModal from 'react-modal';
 import Modal from './Modal';
+import { confirmAlert } from 'react-confirm-alert';
+import { resizeFile } from './utils';
 
 const UpdateProfile = () => {
   const emailRef = useRef();
@@ -19,13 +25,26 @@ const UpdateProfile = () => {
   const [imgError, setImgError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const imgTypes = ['image/png', 'image/jpeg'];
+  const imageUrlRef =
+    user?.avatarUrl && projectStorage.refFromURL(user.avatarUrl);
 
-  const { url, progress } = useStorage(file, `avatars/${currentUser?.uid}`);
+  const { url } = useStorage(file, `avatars/${currentUser?.uid}`);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const [user] = await getUserByUserId(currentUser?.uid);
+      user && setUser(user);
+    };
+
+    currentUser && getUser();
+  }, [currentUser, imageUrlRef]);
 
   const handleImageChange = e => {
     let selected = e.target.files[0];
     if (selected && imgTypes.includes(selected.type)) {
-      setFile(selected);
+      resizeFile(selected, 500, 500).then(file => {
+        setFile(file);
+      });
       setImgError('');
     } else {
       setFile(null);
@@ -35,6 +54,26 @@ const UpdateProfile = () => {
     }
   };
 
+  const handleDeleteAvatar = async () => {
+    confirmAlert({
+      title: 'Confirm to submit',
+      message: 'Are you sure to do this?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () =>
+            deleteImageFromStorage(imageUrlRef).then(() => {
+              updateAvatarUrl(user?.docId, '');
+            }),
+        },
+        {
+          label: 'No',
+          onClick: () => history.push(-1),
+        },
+      ],
+    });
+  };
+
   useEffect(() => {
     const updateAvatar = async () => {
       await updateAvatarUrl(user?.docId, url);
@@ -42,45 +81,10 @@ const UpdateProfile = () => {
     url && updateAvatar();
   }, [url]);
 
-  useEffect(() => {
-    const getUser = async () => {
-      const [user] = await getUserByUserId(currentUser?.uid);
-      user && setUser(user);
-    };
-
-    currentUser && getUser();
-  }, [currentUser]);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-      return setError('Passwords do not match');
-    }
-
-    const promises = [];
-    if (emailRef.current.value !== currentUser.email) {
-      promises.push(updateEmail(emailRef.current.value));
-    }
-    if (passwordRef.current.value !== currentUser.password) {
-      promises.push(updatePassword(passwordRef.current.value));
-    }
-
-    Promise.all(promises)
-      .then(() => {
-        history.push('/');
-      })
-      .catch(() => {
-        setError('Failed to update account');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }
-
   return (
-    <div className="m-4 flex justify-center">
+    <div className="m-4 flex justify-center mt-12">
       <div>
-        <h2 className="flex justify-center text-xl">Update Profile</h2>
+        {/* <h2 className="flex justify-center text-xl">Update Profile</h2> */}
         <div className="flex flex-col p-6">
           {error && (
             <div className="bg-red-500 text-white text-center p-2 mb-4">
@@ -108,6 +112,11 @@ const UpdateProfile = () => {
                 </strong>
               </h3>
               <button onClick={() => setOpenModal(true)}>Change avatar</button>
+              {user?.avatarUrl && (
+                <button className="text-red-600" onClick={handleDeleteAvatar}>
+                  Remove avatar
+                </button>
+              )}
               <Modal showModal={openModal} setShowModal={setOpenModal}>
                 <input
                   className="cursor-pointer appearance-none"
@@ -137,8 +146,24 @@ const UpdateProfile = () => {
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg">
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                stroke-width="2"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              />
+            </svg>
+            <Link
+              className="focus:outline-none focus:ring-transparent focus:ring-2"
+              to={`/updatefullname/${user?.docId}`}>
+              Update fullname
+            </Link>
+          </div>
+          <div className="group -mx-4 mb-4 p-1 border-b-2 hover:border-black focus-within:border-black">
+            <svg
+              className="w-5 inline-block mx-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
                 stroke-width="2"
                 d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
             </svg>
@@ -156,8 +181,6 @@ const UpdateProfile = () => {
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg">
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
                 stroke-width="2"
                 d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
             </svg>
@@ -168,9 +191,7 @@ const UpdateProfile = () => {
             </Link>
           </div>
           <div className="flex flex-row justify-center items-center ">
-            <Link
-              className="py-2 px-3 border-2 bg-gray-200 shadow hover:shadow-lg hover:bg-black hover:text-white hover:border-black tracking-wider transform hover:scale-105"
-              to="/">
+            <Link className="submitButton" to="/">
               Submit
             </Link>
           </div>

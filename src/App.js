@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { useState } from 'react';
 import Navbar from './Navbar';
 import Home from './Home';
 import NotFound from './NotFound';
@@ -20,22 +21,28 @@ import UpdateEmail from './UpdateEmail';
 import UserPreview from './UserPreview';
 import NearYou from './NearYou';
 import ProtectedRoute from './ProtectedRoute';
+import UpdateFullName from './UpdateFullName';
 
 function App() {
+  const [navbarVisible, setNavbarVisible] = useState(true);
+
   return (
     <Router>
       <div className="App">
         <AuthProvider>
-          <Navbar />
+          <Navbar
+            navbarVisible={navbarVisible}
+            setNavbarVisible={setNavbarVisible}
+          />
           {/* <SearchEvents /> */}
-          <div className="content">
+          <div className={navbarVisible ? 'content mt-32' : 'content mt-24'}>
             <Switch>
               <Route exact path="/">
                 <Home />
               </Route>
-              <Route path="/events/:id">
+              <ProtectedRoute path="/events/:id">
                 <EventsDetails />
-              </Route>
+              </ProtectedRoute>
               <Route path="/events">
                 <EventsListPage />
               </Route>
@@ -62,6 +69,9 @@ function App() {
               </ProtectedRoute>
               <ProtectedRoute path="/updateemail">
                 <UpdateEmail />
+              </ProtectedRoute>
+              <ProtectedRoute path="/updatefullname/:docId">
+                <UpdateFullName />
               </ProtectedRoute>
               <ProtectedRoute path="/changepassword">
                 <ChangePassword />

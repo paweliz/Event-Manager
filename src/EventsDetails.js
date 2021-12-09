@@ -19,22 +19,9 @@ import {
 import moment from 'moment';
 import Modal from './Modal';
 import PersonForm from './PersonForm';
-import {
-  EmailShareButton,
-  FacebookShareButton,
-  LinkedinShareButton,
-  RedditShareButton,
-  TelegramShareButton,
-  TwitterShareButton,
-  WhatsappShareButton,
-  EmailIcon,
-  FacebookIcon,
-  LinkedinIcon,
-  RedditIcon,
-  TelegramIcon,
-  TwitterIcon,
-  WhatsappIcon,
-} from 'react-share';
+import { ShareButtons } from './utils';
+import { SiGooglecalendar } from 'react-icons/si';
+
 //const gapi = window.gapi
 const DISCOVERY_DOCS = [
   'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest',
@@ -51,9 +38,19 @@ const EventsDetails = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [userData, setUserData] = useState([]);
   const imageUrlRef = events?.image && projectStorage.refFromURL(events?.image);
+
   useEffect(() => {
     getCollectionById('events', setEvents, id);
   }, [events?.participants]);
+
+  useEffect(() => {
+    const getParticipants = async () => {
+      await participantsHandler();
+    };
+    if (events?.length !== 0) {
+      getParticipants();
+    }
+  }, [events]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -133,6 +130,7 @@ const EventsDetails = () => {
     });
   };
 
+  //console.log(displayParticipants());
   // useEffect(()=>{
   //   events?.participants?.length !== 0 && events?.participants?.map(async (item)=> {
   //     const [user] = await getUserByUserId(item);
@@ -149,7 +147,7 @@ const EventsDetails = () => {
   };
   const participantsHandler = async () => {
     getParticipantsProfiles().then(participants => setPeople(participants));
-    setModalOpen(true);
+    //setModalOpen(true);
   };
 
   const joinHandler = () => {
@@ -214,6 +212,15 @@ const EventsDetails = () => {
     });
   };
 
+  // const DisplayParticipants = () => (
+  //   <div className="flex flex-row">
+  //     {people.length !== 0 &&
+  //       people
+  //         .slice(9)
+  //         .map(item => <PersonForm person={item} showName={false} />)}
+  //   </div>
+  // );
+
   return (
     <div className="py-6 mx-auto max-w-4xl grid justify-items-center">
       <Modal showModal={modalOpen} setShowModal={setModalOpen}>
@@ -223,66 +230,115 @@ const EventsDetails = () => {
       </Modal>
       {events && (
         <article>
-          <div className="grid grid-cols-3 border-t-2 bg-gray-200">
+          <div className="flex flex-row bg-transparent">
             {events.image ? (
               <img
-                className="row-span-2 col-span-2 w-full h-64 object-cover "
+                className="flex-auto w-full h-72 object-cover "
                 src={events.image}
                 alt={events.title + ' image'}
               />
             ) : (
-              <p className="row-span-2 col-span-2 w-full h-64 object-cover border-2">
+              <p className="flex-auto w-full h-64 object-cover border-2">
                 <center>No image for this event</center>
               </p>
             )}
-            <div className="p-4 grid justify-items-start bg-transparent">
-              <h2 className="text-xl font-bold justify-self-center bg-transparent">
-                {events.title}
-              </h2>
-              <p onClick={participantsHandler} className="bg-transparent">
-                Participants: {events?.participants?.length}/
-                {events?.maxParticipants}
-              </p>
-              <p onClick={() => {}} className="pt-3 bg-transparent">
-                Organized by:
-                <Link
-                  className="bg-transparent grid grid-row-2"
-                  to={`/user/${authorData.userId}`}>
-                  {events.organizer}
-                  <img
-                    className="rounded-full w-6 h-6"
-                    alt="avatar"
-                    src={authorData.avatarUrl}
-                  />
-                </Link>
-              </p>
-              <p className="bg-transparent">Location: {events.location}</p>
-              <p className="bg-transparent">Category: {events.category}</p>
+            <div className="px-4 pb-4 flex-col items-start bg-transparent">
+              <center>
+                <h2 className="text-xl font-bold justify-self-center bg-transparent">
+                  {events.title}
+                </h2>
+              </center>
               <p className="text-lg font-bold pt-3 bg-transparent">
                 {events?.date?.seconds
                   ? moment(events?.date?.seconds * 1000).format('llll')
                   : events.date}
               </p>
+              <p onClick={participantsHandler} className="bg-transparent mt-1">
+                Participants: {events?.participants?.length}/
+                {events?.maxParticipants}
+              </p>
+
+              <p className="bg-transparent mt-1">Category: {events.category}</p>
+              <p className="bg-transparent mt-1">
+                <svg
+                  className="w-5 inline-block mr-2 bg-transparent stroke-current "
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    stroke-width="2"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  <path
+                    stroke-width="2"
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>{' '}
+                {events.location}
+              </p>
+              <p className="bg-transparent flex items-center">
+                <svg
+                  className="w-5 inline-block mr-2 bg-transparent stroke-current "
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    stroke-width="2"
+                    d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
+                </svg>
+                <p className="mt-2">
+                  <ShareButtons events={events} id={id} />
+                </p>
+              </p>
+              <div className="flex justify-start">
+                {currentUser &&
+                  (events?.participants?.includes(currentUser.uid) ? (
+                    <div className="flex flex-row justify-between">
+                      <button className="saveGCalBtn" onClick={onClickGCal}>
+                        <div className="flex flex-row justify-center items-center bg-transparent text-white">
+                          <SiGooglecalendar
+                            size={25}
+                            color="white"
+                            className="bg-transparent fill-white stroke-0 text-white"
+                          />
+                          <p className="bg-transparent text-current">
+                            Save in Google Calendar
+                          </p>
+                        </div>
+                      </button>
+
+                      <button className="leaveEventBtn" onClick={leaveHandler}>
+                        Leave
+                      </button>
+                    </div>
+                  ) : (
+                    <button className="createEventSubmit" onClick={joinHandler}>
+                      Join
+                    </button>
+                  ))}
+              </div>
             </div>
           </div>
-          <div className="border-t-2 border-b-2 p-2 mb-2">
+          <div className="border-b-2 p-2 mb-2 ">
             <h3 className="text-lg font-bold">About this event</h3>
             {events.description}
           </div>
           {events.updateDate && (
             <p className="text-xs pb-4">
-              Edited: {(events.updateDate = new Date().toString())}
+              Edited: {(events.updateDate = new Date()?.toString())}
             </p>
           )}
           {events?.coordinates && (
-            <iframe
-              title="map"
-              width="600"
-              height="450"
-              // style="border:0"
-              loading="lazy"
-              allowFullScreen
-              src={`https://www.google.com/maps/embed/v1/place?key=${process.env.REACT_APP_MAPS_API_KEY}&q=${events.coordinates.lat},${events.coordinates.lng}`}></iframe>
+            <div className="flex justify-center">
+              <iframe
+                title="map"
+                width="600"
+                height="450"
+                // style="border:0"
+                loading="lazy"
+                allowFullScreen
+                src={`https://www.google.com/maps/embed/v1/place?key=${process.env.REACT_APP_MAPS_API_KEY}&q=${events.coordinates.lat},${events.coordinates.lng}`}></iframe>
+            </div>
           )}
           {/* {console.log(`coordinates: https://www.google.com/maps/embed/v1/place?key=${process.env.REACT_APP_MAPS_API_KEY}&q=${events.coordinates.lat},${events.coordinates.lng}`)} */}
           <div className="flex justify-between mb-4">
@@ -293,39 +349,6 @@ const EventsDetails = () => {
                 Delete Event
               </button>
             )}
-            <EmailShareButton
-              subject={`Join ${events?.title} event!`}
-              body={`Hello, \njoin with me to the event ${events?.title}. This is the short description of the event:\n${events.description}.\n\nClick url below, see more details and join it!`}
-              separator={'\n'}
-              url={`https://pawel-lizurej-event-manager.vercel.app/events/${id}`}>
-              <EmailIcon size={32} round={true} />
-            </EmailShareButton>
-            <FacebookShareButton
-              quote={`Hello, \njoin with me to the event ${events?.title}. This is the short description of the event:\n${events.description}\n\nClick url below, see more details and join it!`}
-              hashtag={events?.title?.replace(/\s/g, '')}
-              url={`https://pawel-lizurej-event-manager.vercel.app/events/${id}`}>
-              <FacebookIcon size={32} round={true} />
-            </FacebookShareButton>
-            {currentUser &&
-              (events?.participants?.includes(currentUser.uid) ? (
-                <>
-                  <button onClick={onClickGCal}>
-                    Export to Google Calendar
-                  </button>
-
-                  <button
-                    className="self-center py-2 px-3 border-2 bg-gray-200 shadow hover:shadow-lg hover:bg-black hover:text-white hover:border-black tracking-wider transform hover:scale-105"
-                    onClick={leaveHandler}>
-                    Leave
-                  </button>
-                </>
-              ) : (
-                <button
-                  className="self-center py-2 px-3 border-2 bg-gray-200 shadow hover:shadow-lg hover:bg-black hover:text-white hover:border-black tracking-wider transform hover:scale-105"
-                  onClick={joinHandler}>
-                  Join
-                </button>
-              ))}
             {currentUser?.uid === events.author && (
               <Link to={`/updateevent/${id}`}>
                 <button className="self-center py-2 px-3 border-2 bg-gray-200 shadow hover:shadow-lg hover:bg-black hover:text-white hover:border-black tracking-wider transform hover:scale-105">
@@ -334,13 +357,40 @@ const EventsDetails = () => {
               </Link>
             )}
           </div>
-          {/* FacebookShareButton,
-  HatenaShareButton,
-  LinkedinShareButton,
-  RedditShareButton,
-  TelegramShareButton,
-  TwitterShareButton,
-  WhatsappShareButton, */}
+
+          <p className="pt-3 bg-transparent flex flex-row mb-4">
+            <b>Participants:</b>
+            <div className="flex flex-row">
+              {people?.length !== 0 &&
+                people?.map(item => (
+                  <PersonForm person={item[0]} showName={false} />
+                ))}
+            </div>
+            {/* <Link
+              className="bg-transparent flex flex-row justify-evenly ml-2"
+              to={`/user/${authorData.userId}`}>
+              {events.organizer}
+              <img
+                className="rounded-full w-6 h-6 ml-2"
+                alt="avatar"
+                src={authorData.avatarUrl}
+              />
+            </Link> */}
+          </p>
+
+          <p className="pt-3 bg-transparent flex flex-row mb-4">
+            <b>Organizer:</b>
+            <Link
+              className="bg-transparent flex flex-row justify-evenly ml-2"
+              to={`/user/${authorData.userId}`}>
+              {events.organizer}
+              <img
+                className="rounded-full w-6 h-6 ml-2"
+                alt="avatar"
+                src={authorData.avatarUrl}
+              />
+            </Link>
+          </p>
 
           <Link
             className="self-center py-2 px-3 border-2 bg-gray-200 shadow hover:shadow-lg hover:bg-gray-900 hover:text-white hover:border-gray-900 tracking-wider transform hover:scale-105 group"
@@ -351,11 +401,7 @@ const EventsDetails = () => {
               stroke="currentColor"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+              <path stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
             Go to all events
           </Link>
