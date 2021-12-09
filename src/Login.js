@@ -21,7 +21,7 @@ const Login = () => {
       history.push('/');
     } catch (err) {
       console.log(err);
-      setError('Failed to log in');
+      setError(`Failed to log in. ${err?.message}`);
     } finally {
       setLoading(false);
     }
