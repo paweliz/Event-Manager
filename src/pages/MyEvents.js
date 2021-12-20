@@ -2,12 +2,11 @@ import {
   getCollectionByGivenParam,
   getEventById,
   getUserByUserId,
-} from './firebase/firebase';
+} from '../firebase/firebase';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from './customHooks/AuthContext';
+import { useAuth } from '../customHooks/AuthContext';
 import { useHistory } from 'react-router-dom';
-import EventsListComponent from './EventsListComponent';
+import EventsListComponent from '../components/EventsListComponent';
 
 const MyEvents = () => {
   const [events, setEvents] = useState([]);
@@ -82,6 +81,7 @@ const MyEvents = () => {
           withTitle={false}
           events={events}
           sortable={false}
+          showOutdated={true}
         />
       ) : activeButton === 'left' ? (
         <p>You have not created any events yet...</p>

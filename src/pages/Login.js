@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { useAuth } from './customHooks/AuthContext';
+import { useAuth } from '../customHooks/AuthContext';
 import { Link, useHistory } from 'react-router-dom';
 
 const Login = () => {
@@ -89,7 +89,7 @@ const Login = () => {
             Need an account?{' '}
             <Link
               to="/signup"
-              className="py-1 px-3 border-2 bg-gray-200 shadow hover:shadow-lg hover:bg-black hover:text-white hover:border-black tracking-wider transform hover:scale-105 text-xs rounded">
+              className="py-2 px-3 text-orange hover:border-b-2 bg-transparent hover:shadow-lg   hover:border-orange tracking-wider transform hover:scale-105 text-md">
               Sign Up
             </Link>
           </p>

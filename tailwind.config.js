@@ -45,6 +45,8 @@ module.exports = {
         'deepy-red': '#660708',
         'black-pearl': '#161a1d',
         'cod-gray': '#0b090a',
+        'light-yellow': '#fed766',
+        'deep-yellow': '#f6ae2d',
         'orange': '#f26419',
         'lightest-orange' :'#FFBB96',
         'light-orange': '#FFA371',

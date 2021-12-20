@@ -1,24 +1,20 @@
 import { useRef, useState, useEffect } from 'react';
-import { useAuth } from './customHooks/AuthContext';
+import { useAuth } from '../customHooks/AuthContext';
 import { Link, useHistory } from 'react-router-dom';
 import {
   getUserByUserId,
   updateAvatarUrl,
   deleteImageFromStorage,
-} from './firebase/firebase';
-import { projectStorage } from './firebase/firebaseConfig';
-import useStorage from './customHooks/useStorage';
-import Modal from './Modal';
+} from '../firebase/firebase';
+import { projectStorage } from '../firebase/firebaseConfig';
+import useStorage from '../customHooks/useStorage';
+import Modal from '../components/Modal';
 import { confirmAlert } from 'react-confirm-alert';
-import { resizeFile } from './utils';
+import { resizeFile } from '../utils/utils';
 
 const UpdateProfile = () => {
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  const passwordConfirmRef = useRef();
-  const { currentUser, updatePassword, updateEmail } = useAuth();
+  const { currentUser } = useAuth();
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const history = useHistory();
   const [user, setUser] = useState(null);
   const [file, setFile] = useState(null);

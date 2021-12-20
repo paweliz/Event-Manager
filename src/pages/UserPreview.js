@@ -1,9 +1,9 @@
-import EventsListComponent from './EventsListComponent';
+import EventsListComponent from '../components/EventsListComponent';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import {
   getCollectionByGivenParam,
   getUserByUserId,
-} from './firebase/firebase';
+} from '../firebase/firebase';
 import { useState, useEffect } from 'react';
 import moment from 'moment';
 const UserPreview = () => {

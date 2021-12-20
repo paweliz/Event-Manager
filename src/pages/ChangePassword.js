@@ -1,20 +1,17 @@
 import { useRef, useState } from 'react';
-import { useAuth } from './customHooks/AuthContext';
+import { useAuth } from '../customHooks/AuthContext';
 import { Link, useHistory } from 'react-router-dom';
-import { validPassword } from './Regex.js';
+import { validPassword } from '../utils/Regex.js';
 
 const ChangePassword = () => {
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
-  const { currentUser, updatePassword, updateEmail } = useAuth();
+  const { currentUser, updatePassword } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const history = useHistory();
   const [passwordError, setPasswordError] = useState(false);
 
-  const validate = () => {
-    setPasswordError(!validPassword.test(passwordRef.current.value));
-  };
   const handleSubmit = e => {
     e.preventDefault();
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {

@@ -96,6 +96,29 @@
   @apply lg:w-44 mt-2 py-2 px-3 border-2 bg-ll-red border-ll-red shadow hover:shadow-lg hover:bg-torch-red text-white hover:border-ll-red tracking-wider transform hover:scale-105 rounded;
 }
 
+.deleteEventBtn {
+  @apply mt-2 py-2 px-2 border-2 bg-ll-red border-ll-red shadow hover:shadow-lg hover:bg-torch-red text-white hover:border-ll-red tracking-wider transform hover:scale-105 rounded;
+}
+
+.updateEventBtn {
+  @apply mt-2 py-2 px-2 border-2 bg-deep-yellow border-deep-yellow shadow hover:shadow-lg hover:bg-deep-yellow text-white hover:border-light-yellow tracking-wider transform hover:scale-105 rounded;
+}
+
 .saveGCalBtn {
   @apply lg:w-44 mt-2 py-2 px-3 mr-2 border-2 bg-light-navy border-light-navy text-xs shadow hover:shadow-lg hover:bg-navy text-white hover:border-light-navy tracking-wider transform hover:scale-105 rounded;
+}
+
+.loginBtnInactive {
+  @apply bg-transparent px-4 ml-6 text-xl text-black hover:text-orange;
+}
+
+.loginBtnActive {
+  @apply bg-transparent px-4 ml-6 text-xl text-orange;
+}
+.registerBtnInactive {
+  @apply border-l border-black bg-transparent px-4 mr-2 text-xl text-black hover:text-orange;
+}
+
+.registerBtnActive {
+  @apply border-l border-black bg-transparent px-4 mr-2 text-xl text-orange;
 }

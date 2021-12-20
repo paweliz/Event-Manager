@@ -1,56 +1,43 @@
 import { useRef, useState } from 'react';
-import { useAuth } from './customHooks/AuthContext';
-import { Link, useHistory } from 'react-router-dom';
-import { validEmail } from './Regex.js';
+import { useAuth } from '../customHooks/AuthContext';
+import { Link, useHistory, useParams } from 'react-router-dom';
+import { updateFullName } from '../firebase/firebase';
 
-const UpdateEmail = () => {
-  const emailRef = useRef();
-  const { currentUser, updateEmail } = useAuth();
+const UpdateFullName = () => {
+  const nameRef = useRef();
+  const { currentUser } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const history = useHistory();
-  const [emailError, setEmailError] = useState(false);
+  const { docId } = useParams();
 
-  const validate = () => {
-    setEmailError(!validEmail.test(emailRef.current.value));
-  };
-
-  function handleSubmit(e) {
+  const handleSubmit = async e => {
     e.preventDefault();
-    const promises = [];
-    if (emailRef.current.value !== currentUser.email) {
-      promises.push(updateEmail(emailRef.current.value));
-    }
 
-    Promise.all(promises)
+    await updateFullName(docId, nameRef.current.value)
       .then(() => {
         history.push('/updateprofile');
       })
       .catch(() => {
-        setError('Failed to update email');
+        setError('Failed to update name');
       })
       .finally(() => {
         setLoading(false);
       });
-  }
+  };
 
   return (
-    <div className="m-4 flex justify-center">
+    <div className="m-4 flex justify-center ">
       <form onSubmit={handleSubmit}>
-        <h2 className="flex justify-center text-xl">Update Email</h2>
-        <div className="flex flex-col p-6">
+        <h2 className="flex justify-center text-xl">Update fullname</h2>
+        <div className="flex flex-col p-6 content-center">
           {error && (
             <div className="bg-red-500 text-white text-center p-2 mb-4">
               {error}
             </div>
           )}
-          {emailError && (
-            <div className="bg-red-500 text-white text-center p-2 mb-4">
-              Please, enter valid email
-            </div>
-          )}
           <h3 className="text-lg mb-3">
-            Current email: <strong>{currentUser.email}</strong>
+            Your name: <strong>{currentUser.fullName}</strong>
           </h3>
           <div className="group -mx-4 mb-4 p-1 border-b-2 hover:border-black focus-within:border-black">
             <svg
@@ -61,18 +48,19 @@ const UpdateEmail = () => {
               xmlns="http://www.w3.org/2000/svg">
               <path
                 stroke-width="2"
-                d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              />
             </svg>
             <input
               className="border-l-2 px-2 focus:outline-none focus:ring-transparent focus:ring-2"
-              type="email"
-              name="e-mail"
-              ref={emailRef}
-              placeholder="E-Mail"
+              type="text"
+              name="fullname"
+              ref={nameRef}
+              placeholder="Fullname"
               required
             />
           </div>
-          <div className="flex flex-row-reverse  items-center justify-evenly">
+          <div className="flex flex-row-reverse  items-center justify-between">
             <button className="submitButton" disabled={loading} type="submit">
               Update
             </button>
@@ -88,4 +76,4 @@ const UpdateEmail = () => {
   );
 };
 
-export default UpdateEmail;
+export default UpdateFullName;

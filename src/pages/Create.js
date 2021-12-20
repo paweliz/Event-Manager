@@ -1,21 +1,20 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from './customHooks/AuthContext';
+import { useAuth } from '../customHooks/AuthContext';
 import { useHistory } from 'react-router-dom';
-import { databaseStorage } from './firebase/firebaseConfig';
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from 'react-places-autocomplete';
-import useStorage from './customHooks/useStorage';
+import useStorage from '../customHooks/useStorage';
 import { uuid } from 'uuidv4';
-import { firestore } from './firebase/firebaseConfig';
+import { firestore } from '../firebase/firebaseConfig';
 import {
   getUserByUserId,
   updateUserEvents,
   updateUserAttendingEvents,
-} from './firebase/firebase';
+} from '../firebase/firebase';
 import DateTimePicker from 'react-datetime-picker';
-import { resizeFile } from './utils';
+import { resizeFile } from '../utils/utils';
 
 const Create = () => {
   const { currentUser } = useAuth();

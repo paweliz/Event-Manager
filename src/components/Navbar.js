@@ -1,7 +1,7 @@
 import { Link, useHistory } from 'react-router-dom';
-import { useAuth } from './customHooks/AuthContext';
+import { useAuth } from '../customHooks/AuthContext';
 import { useState, useEffect, useRef } from 'react';
-import { getUserByUserId } from './firebase/firebase';
+import { getUserByUserId } from '../firebase/firebase';
 import { useLocation } from 'react-router-dom';
 
 const Navbar = ({ navbarVisible, setNavbarVisible }) => {
@@ -128,7 +128,7 @@ const Navbar = ({ navbarVisible, setNavbarVisible }) => {
           </div>
         ) : (
           <div>
-            <svg
+            {/* <svg
               className="w-10 h-10 bg-transparent"
               fill="none"
               stroke="none"
@@ -137,7 +137,25 @@ const Navbar = ({ navbarVisible, setNavbarVisible }) => {
               <path
                 strokeWidth="2"
                 d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
+            </svg> */}
+            <Link
+              to="/login"
+              className={
+                location?.pathname === '/login'
+                  ? 'loginBtnActive'
+                  : 'loginBtnInactive'
+              }>
+              Login
+            </Link>
+            <Link
+              to="/signup"
+              className={
+                location?.pathname === '/signup'
+                  ? 'registerBtnActive'
+                  : 'registerBtnInactive'
+              }>
+              Sign Up
+            </Link>
           </div>
         )}
       </div>
@@ -180,24 +198,27 @@ const Navbar = ({ navbarVisible, setNavbarVisible }) => {
               Add event
             </Link>
           )}
-          {currentUser === null && (
-            <Link
-              to="/signup"
-              className={
-                location?.pathname === '/signup' ? 'activeTab' : 'navtab'
-              }>
-              Sign Up
-            </Link>
+          {/* {currentUser === null && (
+            <>
+              <div className="navtab w-96 pointer-events-none"></div>
+              <Link
+                to="/signup"
+                className={
+                  location?.pathname === '/signup' ? 'activeTab' : 'loginBtn'
+                }>
+                Sign Up
+              </Link>
+            </>
           )}
           {currentUser === null && (
             <Link
               to="/login"
               className={
-                location?.pathname === '/login' ? 'activeTab' : 'navtab'
+                location?.pathname === '/login' ? 'activeTab' : 'loginBtn'
               }>
               Login
             </Link>
-          )}
+          )} */}
         </div>
       )}
     </nav>

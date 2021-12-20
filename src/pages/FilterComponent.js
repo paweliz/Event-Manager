@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Modal from './Modal';
+import Modal from '../components/Modal';
 import DateTimePicker from 'react-datetime-picker';
 
 const FilterComponent = ({
@@ -11,6 +11,8 @@ const FilterComponent = ({
   setEndDate,
   category,
   setCategory,
+  place,
+  setPlace,
   submit,
 }) => {
   const [openModal, setOpenModal] = useState(false);
@@ -33,7 +35,16 @@ const FilterComponent = ({
       </button>
       <Modal showModal={openModal} setShowModal={setOpenModal} submit={submit}>
         <div>
-          <div className="flex flex-col">
+          <div className="flex flex-col my-3">
+            <label>City:</label>
+            <input
+              className="border-b-2 hover:border-black focus:border-black focus:outline-none"
+              type="text"
+              value={place}
+              onChange={e => setPlace(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col my-3">
             <label>Number of participants:</label>
             <input
               className="border-b-2 hover:border-black focus:border-black focus:outline-none"
@@ -43,7 +54,7 @@ const FilterComponent = ({
               onChange={e => setMaxParticipants(parseInt(e.target.value, 10))}
             />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col my-3">
             <label>Start date:</label>
             <DateTimePicker
               className="cursor-pointer border-b-2 hover:border-black focus:border-black focus:outline-none"
@@ -55,7 +66,7 @@ const FilterComponent = ({
             />
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-col my-3">
             <label>End date:</label>
             <DateTimePicker
               className="cursor-pointer border-b-2 hover:border-black focus:border-black focus:outline-none"
@@ -66,7 +77,7 @@ const FilterComponent = ({
               disableClock={true}
             />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col my-3">
             <label>Category:</label>
             <select
               value={category}

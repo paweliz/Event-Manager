@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { useAuth } from './customHooks/AuthContext';
+import { useAuth } from '../customHooks/AuthContext';
 import { Link } from 'react-router-dom';
 
 const ForgotPassword = () => {
@@ -61,21 +61,18 @@ const ForgotPassword = () => {
               required
             />
           </div>
-          <button
-            className="self-center py-2 px-3 border-2 bg-gray-200 shadow hover:shadow-lg hover:bg-black hover:text-white hover:border-black tracking-wider transform hover:scale-105"
-            disabled={loading}
-            type="submit">
+          <button className="submitButton" disabled={loading} type="submit">
             Reset Password
           </button>
           <Link
             to="/login"
-            className="py-1 px-3 mt-4 self-center border-2 bg-gray-200 shadow hover:shadow-lg hover:bg-black hover:text-white hover:border-black tracking-wider transform hover:scale-105 text-xs rounded">
+            className="py-2 mt-2 px-3 text-orange hover:border-b-2 bg-transparent hover:shadow-lg self-center hover:border-orange tracking-wider transform hover:scale-105 text-md">
             Login
           </Link>
           <p className="pt-4 text-sm">
             Need an account?{' '}
             <Link
-              className="py-1 px-3 border-2 bg-gray-200 shadow hover:shadow-lg hover:bg-black hover:text-white hover:border-black tracking-wider transform hover:scale-105 text-xs rounded"
+              className="py-2 px-3 text-orange hover:border-b-2 bg-transparent hover:shadow-lg   hover:border-orange tracking-wider transform hover:scale-105 text-md"
               to="/signup">
               Sign Up
             </Link>

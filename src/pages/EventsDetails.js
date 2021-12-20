@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { useAuth } from './customHooks/AuthContext';
-import { projectStorage } from './firebase/firebaseConfig';
+import { useAuth } from '../customHooks/AuthContext';
+import { projectStorage } from '../firebase/firebaseConfig';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import { firestore } from './firebase/firebaseConfig';
 import {
   getCollectionById,
   updateEventParticipants,
@@ -15,12 +14,13 @@ import {
   deleteImageFromStorage,
   updateUserAttendingEvents,
   leaveAttendingUserEvents,
-} from './firebase/firebase';
+} from '../firebase/firebase';
 import moment from 'moment';
-import Modal from './Modal';
-import PersonForm from './PersonForm';
-import { ShareButtons } from './utils';
+import Modal from '../components/Modal';
+import PersonForm from '../components/PersonForm';
+import { ShareButtons } from '../utils/utils';
 import { SiGooglecalendar } from 'react-icons/si';
+import EventsDetailsSkeleton from './EventsDetailsSkeleton';
 
 //const gapi = window.gapi
 const DISCOVERY_DOCS = [
@@ -37,10 +37,16 @@ const EventsDetails = () => {
   const [people, setPeople] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [userData, setUserData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const imageUrlRef = events?.image && projectStorage.refFromURL(events?.image);
+  const now = Date.now();
 
   useEffect(() => {
+    setLoading(true);
     getCollectionById('events', setEvents, id);
+    if (events && events.length !== 0) {
+      setLoading(false);
+    }
   }, [events?.participants]);
 
   useEffect(() => {
@@ -120,7 +126,7 @@ const EventsDetails = () => {
           });
         })
         .catch(error => {
-          if (error && error.error == 'popup_blocked_by_browser') {
+          if (error && error.error === 'popup_blocked_by_browser') {
             console.log('A popup has been blocked by the browser');
           } else {
             console.log(error);
@@ -228,17 +234,19 @@ const EventsDetails = () => {
           <PersonForm person={person[0]} />
         ))}
       </Modal>
-      {events && (
+      {loading ? (
+        <EventsDetailsSkeleton />
+      ) : (
         <article>
           <div className="flex flex-row bg-transparent">
             {events.image ? (
               <img
-                className="flex-auto w-full h-72 object-cover "
+                className="flex-auto w-full max-w-xl h-72 object-cover "
                 src={events.image}
                 alt={events.title + ' image'}
               />
             ) : (
-              <p className="flex-auto w-full h-64 object-cover border-2">
+              <p className="flex-auto w-full max-w-xl h-72 object-cover border-2">
                 <center>No image for this event</center>
               </p>
             )}
@@ -291,7 +299,10 @@ const EventsDetails = () => {
                 </p>
               </p>
               <div className="flex justify-start">
-                {currentUser &&
+                {(events?.endDate
+                  ? events?.endDate?.seconds * 1000
+                  : events?.date?.seconds * 1000) > now ? (
+                  currentUser &&
                   (events?.participants?.includes(currentUser.uid) ? (
                     <div className="flex flex-row justify-between">
                       <button className="saveGCalBtn" onClick={onClickGCal}>
@@ -315,7 +326,12 @@ const EventsDetails = () => {
                     <button className="createEventSubmit" onClick={joinHandler}>
                       Join
                     </button>
-                  ))}
+                  ))
+                ) : (
+                  <b className="self-center mt-4">
+                    The event has already taken place
+                  </b>
+                )}
               </div>
             </div>
           </div>
@@ -343,17 +359,13 @@ const EventsDetails = () => {
           {/* {console.log(`coordinates: https://www.google.com/maps/embed/v1/place?key=${process.env.REACT_APP_MAPS_API_KEY}&q=${events.coordinates.lat},${events.coordinates.lng}`)} */}
           <div className="flex justify-between mb-4">
             {currentUser && currentUser?.uid === events.author && (
-              <button
-                className="self-center py-2 px-3 border-2 bg-gray-200 shadow hover:shadow-lg hover:bg-black hover:text-white hover:border-black tracking-wider transform hover:scale-105"
-                onClick={confirmDeleteEvent}>
+              <button className="deleteEventBtn" onClick={confirmDeleteEvent}>
                 Delete Event
               </button>
             )}
             {currentUser?.uid === events.author && (
               <Link to={`/updateevent/${id}`}>
-                <button className="self-center py-2 px-3 border-2 bg-gray-200 shadow hover:shadow-lg hover:bg-black hover:text-white hover:border-black tracking-wider transform hover:scale-105">
-                  Update Event
-                </button>
+                <button className="updateEventBtn">Update Event</button>
               </Link>
             )}
           </div>
@@ -392,9 +404,9 @@ const EventsDetails = () => {
             </Link>
           </p>
 
-          <Link
+          <button
             className="self-center py-2 px-3 border-2 bg-gray-200 shadow hover:shadow-lg hover:bg-gray-900 hover:text-white hover:border-gray-900 tracking-wider transform hover:scale-105 group"
-            to="/events">
+            onClick={() => history.goBack()}>
             <svg
               className="w-5 inline-block mr-2 bg-transparent stroke-current group-hover:stroke-white"
               fill="none"
@@ -403,8 +415,8 @@ const EventsDetails = () => {
               xmlns="http://www.w3.org/2000/svg">
               <path stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
-            Go to all events
-          </Link>
+            Go back
+          </button>
         </article>
       )}
     </div>

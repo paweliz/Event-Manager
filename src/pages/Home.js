@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { processSortedCollection } from './firebase/firebase';
-import EventsListComponent from './EventsListComponent';
+import { processSortedCollection } from '../firebase/firebase';
+import EventsListComponent from '../components/EventsListComponent';
 
 const Home = () => {
   const [events, setEvents] = useState([]);

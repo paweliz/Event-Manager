@@ -1,17 +1,16 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from './customHooks/AuthContext';
+import { useAuth } from '../customHooks/AuthContext';
 import { useHistory, useParams } from 'react-router-dom';
-import { databaseStorage } from './firebase/firebaseConfig';
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from 'react-places-autocomplete';
-import useStorage from './customHooks/useStorage';
-import './index.css';
-import { firestore } from './firebase/firebaseConfig';
-import { getCollectionById } from './firebase/firebase';
+import useStorage from '../customHooks/useStorage';
+import '../index.css';
+import { firestore } from '../firebase/firebaseConfig';
+import { getCollectionById } from '../firebase/firebase';
 import DateTimePicker from 'react-datetime-picker';
-import { resizeFile } from './utils';
+import { resizeFile } from '../utils/utils';
 
 const UpdateEvent = () => {
   const { currentUser } = useAuth();

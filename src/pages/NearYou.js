@@ -1,9 +1,9 @@
-import EventsListComponent from './EventsListComponent';
+import EventsListComponent from '../components/EventsListComponent';
 import useGeolocation from 'react-hook-geolocation';
 import { getDistance } from 'geolib';
 import { useState, useEffect } from 'react';
-import { getCollection } from './firebase/firebase';
-import EventsListSkeleton from './EventsListSkeleton';
+import { getCollection } from '../firebase/firebase';
+import EventsListSkeleton from '../components/EventsListSkeleton';
 
 const NearYou = () => {
   const geolocation = useGeolocation();
