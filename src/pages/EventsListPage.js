@@ -8,17 +8,21 @@ import FilterComponent from './FilterComponent';
 import EventsListSkeleton from '../components/EventsListSkeleton';
 import CalendarComponent from '../components/CalendarComponent';
 import { AiOutlineCalendar } from 'react-icons/ai';
+import { useHistory, useLocation } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
 
-const EventsListPage = () => {
+const EventsListPage = ({ calendarView, setCalendarView }) => {
   const [events, setEvents] = useState([]);
   const [sortBy, setSortBy] = useState('oldest');
   const [loading, setLoading] = useState(true);
+  const history = createBrowserHistory();
+  const location = useLocation();
   //filters
   const [maxParticipants, setMaxParticipants] = useState();
   const [date, setDate] = useState();
   const [endDate, setEndDate] = useState();
   const [category, setCategory] = useState();
-  const [showCalendar, setShowCalendar] = useState(false);
+  //const [showCalendar, setShowCalendar] = useState(false);
   const [place, setPlace] = useState('');
 
   useEffect(() => {
@@ -46,14 +50,12 @@ const EventsListPage = () => {
       endDate && endDate,
       maxParticipants && maxParticipants,
     );
-    console.log(place);
     if (place?.length > 0 && events?.length > 0) {
       const filteredEvents = events.filter(event => {
         return event.location.toLowerCase().includes(place.toLowerCase());
       });
       return setEvents(filteredEvents);
     }
-    console.log(events);
   };
 
   return (
@@ -64,30 +66,32 @@ const EventsListPage = () => {
         <>
           <EventsListComponent
             events={events}
-            showCalendar={showCalendar}
+            showCalendar={calendarView}
             setSortBy={setSortBy}
             sortBy={sortBy}>
             <button
-              onClick={() => setShowCalendar(!showCalendar)}
-              className="flex flex-row mr-1 border-r-2 pr-2 items-center justify-between content-center">
+              onClick={() => setCalendarView(!calendarView)}
+              className="flex flex-row mr-1 pr-2 items-center justify-between content-center">
               <AiOutlineCalendar size={30} />
-              <p>{showCalendar ? 'Hide' : 'Show'} Calendar View</p>
+              <p>{calendarView ? 'Hide' : 'Show'} Calendar View</p>
             </button>
-            <FilterComponent
-              maxParticipants={maxParticipants}
-              setMaxParticipants={setMaxParticipants}
-              date={date}
-              setDate={setDate}
-              endDate={endDate}
-              setEndDate={setEndDate}
-              category={category}
-              setCategory={setCategory}
-              place={place}
-              setPlace={setPlace}
-              submit={submitHandler}
-            />
+            {calendarView === false && (
+              <FilterComponent
+                maxParticipants={maxParticipants}
+                setMaxParticipants={setMaxParticipants}
+                date={date}
+                setDate={setDate}
+                endDate={endDate}
+                setEndDate={setEndDate}
+                category={category}
+                setCategory={setCategory}
+                place={place}
+                setPlace={setPlace}
+                submit={submitHandler}
+              />
+            )}
           </EventsListComponent>
-          {showCalendar && events?.length > 0 && (
+          {calendarView && events?.length > 0 && (
             <CalendarComponent events={events} />
           )}
         </>

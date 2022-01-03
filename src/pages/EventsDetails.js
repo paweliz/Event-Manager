@@ -21,6 +21,7 @@ import PersonForm from '../components/PersonForm';
 import { ShareButtons } from '../utils/utils';
 import { SiGooglecalendar } from 'react-icons/si';
 import EventsDetailsSkeleton from './EventsDetailsSkeleton';
+import withBreadcrumbs from 'react-router-breadcrumbs-hoc';
 
 //const gapi = window.gapi
 const DISCOVERY_DOCS = [
@@ -40,6 +41,26 @@ const EventsDetails = () => {
   const [loading, setLoading] = useState(true);
   const imageUrlRef = events?.image && projectStorage.refFromURL(events?.image);
   const now = Date.now();
+
+  const Breadcrumbs = withBreadcrumbs()(({ breadcrumbs }) => {
+    return (
+      <div className="flex flex-row mb-4 -mt-4">
+        {breadcrumbs.map(({ breadcrumb }, i) => (
+          <>
+            {breadcrumbs.length - 1 !== i ? (
+              <Link className="mr-2" to={breadcrumb?.key}>{`${
+                breadcrumb?.props?.children === 'Myevents'
+                  ? 'My events'
+                  : breadcrumb?.props?.children
+              } →`}</Link>
+            ) : (
+              <b>{events.title}</b>
+            )}
+          </>
+        ))}
+      </div>
+    );
+  });
 
   useEffect(() => {
     setLoading(true);
@@ -238,6 +259,7 @@ const EventsDetails = () => {
         <EventsDetailsSkeleton />
       ) : (
         <article>
+          <Breadcrumbs />
           <div className="flex flex-row bg-transparent">
             {events.image ? (
               <img
@@ -358,12 +380,12 @@ const EventsDetails = () => {
           )}
           {/* {console.log(`coordinates: https://www.google.com/maps/embed/v1/place?key=${process.env.REACT_APP_MAPS_API_KEY}&q=${events.coordinates.lat},${events.coordinates.lng}`)} */}
           <div className="flex justify-between mb-4">
-            {currentUser && currentUser?.uid === events.author && (
+            {currentUser && currentUser?.uid === events?.author && (
               <button className="deleteEventBtn" onClick={confirmDeleteEvent}>
                 Delete Event
               </button>
             )}
-            {currentUser?.uid === events.author && (
+            {currentUser?.uid === events?.author && (
               <Link to={`/updateevent/${id}`}>
                 <button className="updateEventBtn">Update Event</button>
               </Link>
@@ -394,12 +416,12 @@ const EventsDetails = () => {
             <b>Organizer:</b>
             <Link
               className="bg-transparent flex flex-row justify-evenly ml-2"
-              to={`/user/${authorData.userId}`}>
+              to={`/user/${authorData?.userId}`}>
               {events.organizer}
               <img
                 className="rounded-full w-6 h-6 ml-2"
                 alt="avatar"
-                src={authorData.avatarUrl}
+                src={authorData?.avatarUrl}
               />
             </Link>
           </p>

@@ -1,7 +1,8 @@
-import { databaseStorage } from './firebase/firebaseConfig';
+import { databaseStorage } from '../firebase/firebaseConfig';
 import { useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import DataListInput from 'react-plain-datalist-input';
+import { processSortedCollection } from '../firebase/firebase';
 
 const SearchEvents = () => {
   const [events, setEvents] = useState([]);
@@ -10,15 +11,15 @@ const SearchEvents = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    const eventRef = databaseStorage.ref('Event');
-    eventRef.on('value', snapshot => {
-      const events = snapshot.val();
-      const eventList = [];
-      for (let id in events) {
-        eventList.push({ ...events[id], id });
-      }
-      setEvents(eventList);
-    });
+    processSortedCollection('events', setEvents, 'date', 'asc');
+    // eventRef.on('value', snapshot => {
+    //   const events = snapshot.val();
+    //   const eventList = [];
+    //   for (let id in events) {
+    //     eventList.push({ ...events[id], id });
+    //   }
+    //   setEvents(eventList);
+    // });
   }, []);
 
   const onSelect = e => {
@@ -27,17 +28,18 @@ const SearchEvents = () => {
   };
 
   return (
-    <div className="border-b-2 border-reddy-gray hover:border-black w-screen">
+    <div className="border-b-2 border-orange hover:border-black w-48 mx-6">
       <DataListInput
         placeholder=" Search event...."
         value={searchValue}
         onInput={value => {
           setSearchValue(value);
         }}
-        items={events.map(event => ({
+        items={events?.map(event => ({
           label: event.title,
           key: event.id,
           author: event.organizer,
+          category: event.category,
         }))}
         onSelect={onSelect}
       />

@@ -7,8 +7,10 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../customHooks/AuthContext';
 import { useHistory } from 'react-router-dom';
 import EventsListComponent from '../components/EventsListComponent';
+import CalendarComponent from '../components/CalendarComponent';
+import { AiOutlineCalendar } from 'react-icons/ai';
 
-const MyEvents = () => {
+const MyEvents = ({ calendarView, setCalendarView }) => {
   const [events, setEvents] = useState([]);
   const { currentUser } = useAuth();
   const history = useHistory();
@@ -41,7 +43,6 @@ const MyEvents = () => {
       events.forEach(event => {
         tmpEvents.push(event[0]);
       });
-      console.log(tmpEvents);
       setEvents(tmpEvents);
     });
   };
@@ -56,24 +57,32 @@ const MyEvents = () => {
   return (
     <div className="m-4">
       {/* <p className="text-xl text-bold">List of Events</p> */}
-      <div className="ml-1">
+      <div className="flex flex-row justify-between ">
+        <div className="ml-1">
+          <button
+            className={
+              activeButton === 'left'
+                ? 'activeMyEventsButton'
+                : 'inactiveMyEventsButton'
+            }
+            onClick={() => setActiveButton('left')}>
+            Created
+          </button>
+          <button
+            className={
+              activeButton === 'right'
+                ? 'activeMyEventsButton'
+                : 'inactiveMyEventsButton'
+            }
+            onClick={eventsHandler}>
+            Taking part
+          </button>
+        </div>
         <button
-          className={
-            activeButton === 'left'
-              ? 'activeMyEventsButton'
-              : 'inactiveMyEventsButton'
-          }
-          onClick={() => setActiveButton('left')}>
-          Created
-        </button>
-        <button
-          className={
-            activeButton === 'right'
-              ? 'activeMyEventsButton'
-              : 'inactiveMyEventsButton'
-          }
-          onClick={eventsHandler}>
-          Taking part
+          onClick={() => setCalendarView(!calendarView)}
+          className="flex flex-row mt-2 pr-2 items-center self-center justify-between content-center">
+          <AiOutlineCalendar size={30} />
+          <p className="ml-2">{calendarView ? 'Hide' : 'Show'} Calendar View</p>
         </button>
       </div>
       {events?.length > 0 ? (
@@ -82,11 +91,16 @@ const MyEvents = () => {
           events={events}
           sortable={false}
           showOutdated={true}
+          fromMyEvents={true}
+          showCalendar={calendarView}
         />
       ) : activeButton === 'left' ? (
         <p>You have not created any events yet...</p>
       ) : (
         <p>You are not taking part in any events yet...</p>
+      )}
+      {calendarView && events?.length > 0 && (
+        <CalendarComponent events={events} />
       )}
     </div>
   );

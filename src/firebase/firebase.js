@@ -168,7 +168,7 @@ export const getFilteredEvents = async (
     const dataList = [];
     docsSnap.forEach(doc => {
       let id = doc.id;
-      console.log(doc.data());
+      //      console.log(doc.data());
       dataList.push({ ...doc.data(), id });
     });
     setData(dataList);

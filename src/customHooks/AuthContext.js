@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
       })
       .then(() => {
         const user = auth.currentUser;
-        return firestore().collection('users').add({
+        return firestore().collection('users').doc(user.uid).set({
           userId: user.uid,
           avatarUrl: '',
           fullName: fullName,

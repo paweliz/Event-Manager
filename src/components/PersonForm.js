@@ -9,13 +9,13 @@ const PersonForm = ({ person, showName, list }) => {
           ? 'flex my-2 flex-col justify-start items-center border-b-2'
           : 'ml-2 flex flex-row'
       }
-      to={`/user/${person.userId}`}>
+      to={`/user/${person?.userId}`}>
       <img
         className="rounded-full w-8 h-8"
         alt="avatar"
-        src={person.avatarUrl}
+        src={person?.avatarUrl}
       />
-      {showName && person.fullName}
+      {showName && person?.fullName}
     </Link>
   );
 };

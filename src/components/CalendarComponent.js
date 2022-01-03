@@ -31,8 +31,7 @@ const CalendarComponent = ({ events }) => {
   }
 
   return (
-    <div className="h-96">
-      {console.log(myEventsList)}
+    <div className="h-96 mt-4">
       <Calendar
         localizer={localizer}
         events={myEventsList}

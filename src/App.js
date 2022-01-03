@@ -21,9 +21,12 @@ import UserPreview from './pages/UserPreview';
 import NearYou from './pages/NearYou';
 import ProtectedRoute from './ProtectedRoute';
 import UpdateFullName from './pages/UpdateFullName';
+import SearchEvents from './components/SearchEvents';
 
 function App() {
   const [navbarVisible, setNavbarVisible] = useState(true);
+  const [calendarView, setCalendarView] = useState(false);
+  const [myEventsCalendarView, setMyEventsCalendarView] = useState(false);
 
   return (
     <Router>
@@ -33,20 +36,32 @@ function App() {
             navbarVisible={navbarVisible}
             setNavbarVisible={setNavbarVisible}
           />
-          {/* <SearchEvents /> */}
+          <SearchEvents />
           <div className={navbarVisible ? 'content mt-32' : 'content mt-24'}>
             <Switch>
               <Route exact path="/">
+                <Home />
+              </Route>
+              <Route path="/home">
                 <Home />
               </Route>
               <ProtectedRoute path="/events/:id">
                 <EventsDetails />
               </ProtectedRoute>
               <Route path="/events">
-                <EventsListPage />
+                <EventsListPage
+                  calendarView={calendarView}
+                  setCalendarView={setCalendarView}
+                />
               </Route>
+              <ProtectedRoute path="/myevents/:id">
+                <EventsDetails />
+              </ProtectedRoute>
               <ProtectedRoute path="/myevents">
-                <MyEvents />
+                <MyEvents
+                  calendarView={myEventsCalendarView}
+                  setCalendarView={setMyEventsCalendarView}
+                />
               </ProtectedRoute>
               <ProtectedRoute path="/updateevent/:id">
                 <UpdateEvent />

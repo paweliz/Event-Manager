@@ -20,7 +20,7 @@ const FilterComponent = ({
   return (
     <>
       <button
-        className="flex flex-row mr-1 border-r-2 pr-2"
+        className="flex flex-row mr-1 border-l-2 border-r-2 pr-2"
         onClick={() => setOpenModal(true)}>
         <svg
           className="w-6 h-6 bg-transparent mx-3 stroke-current group-hover:stroke-white"
