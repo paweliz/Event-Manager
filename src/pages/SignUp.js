@@ -11,6 +11,7 @@ const SignUp = () => {
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
   const fullNameRef = useRef();
+  const categoryRef = useRef();
   const { signup } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -49,6 +50,7 @@ const SignUp = () => {
         emailRef.current.value,
         passwordRef.current.value,
         fullNameRef.current.value,
+        categoryRef.current.value,
       );
       history.push('/verifyemail');
     } catch (e) {
@@ -91,6 +93,18 @@ const SignUp = () => {
               onBlur={validate}
               required
             />
+          </div>
+          <div className="group -mx-4 mb-4 flex flex-row justify-between">
+            <label className="border-r-2 -pr-4">Favourite category</label>
+            <select
+              ref={categoryRef}
+              className="cursor-pointer border-b-2 ml-5 hover:border-black focus:outline-none w-full focus:border-black">
+              <option value="Arts">Arts</option>
+              <option value="Business">Business</option>
+              <option value="Charity">Charity</option>
+              <option value="Music">Music</option>
+              <option value="Sports">Sports</option>
+            </select>
           </div>
           <div className="group -mx-4 mb-4 p-1 border-b-2 hover:border-gray-900 focus-within:border-gray-900">
             {emailError && (

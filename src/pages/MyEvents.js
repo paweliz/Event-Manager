@@ -40,7 +40,7 @@ const MyEvents = ({ calendarView, setCalendarView }) => {
     setActiveButton('right');
     getUserAttendingEvents().then(events => {
       let tmpEvents = [];
-      events.forEach(event => {
+      events?.forEach(event => {
         tmpEvents.push(event[0]);
       });
       setEvents(tmpEvents);

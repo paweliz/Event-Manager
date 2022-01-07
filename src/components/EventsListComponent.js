@@ -23,7 +23,7 @@ const EventsListComponent = ({
   return (
     <div>
       <div className="flex flex-row justify-between">
-        {withTitle && <p className=" text-xl text-bold ">{title}</p>}
+        {withTitle && <p className=" text-xl text-bold mt-2">{title}</p>}
         <div className="flex flex-row justify-content-end">
           {children}
           {sortable && showCalendar === false && (
@@ -40,7 +40,7 @@ const EventsListComponent = ({
         </div>
       </div>
       {showCalendar === false && (
-        <div className="mt-8 grid md:grid-cols-4 gap-10">
+        <div className="mt-6 grid md:grid-cols-4 gap-10">
           {events?.map(
             event =>
               (event?.endDate

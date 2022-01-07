@@ -65,11 +65,11 @@
   outline: none;
 }
 .navtab {
-  @apply transition duration-150 ease-in-out transform hover:-translate-y-1 flex-1 text-center text-white py-3 hover:text-white border-b-0 border-light-orange2 hover:border-orange bg-light-orange hover:bg-orange hover:shadow hover:font-semibold;
+  @apply transition duration-150 ease-in-out transform hover:-translate-y-1 text-sm md:text-base flex-1 text-center text-white py-3 hover:text-white border-b-0 border-light-orange2 hover:border-orange bg-light-orange hover:bg-orange hover:shadow hover:font-semibold;
 }
 
 .activeTab {
-  @apply transition duration-150 ease-in-out transform flex-1 text-center text-white py-3 border-b-0 border-l border-r border-orange bg-orange font-semibold shadow;
+  @apply transition duration-150 ease-in-out transform flex-1 text-sm md:text-base text-center text-white py-3 border-b-0 border-l border-r border-orange bg-orange font-semibold shadow;
 }
 
 .activeMyEventsButton {
@@ -81,19 +81,19 @@
 }
 
 .submitButton {
-  @apply lg:self-center py-2 px-3 border-2 bg-green border-green shadow hover:shadow-lg hover:bg-dark-green text-white hover:border-green tracking-wider transform hover:scale-105 rounded;
+  @apply md:self-center py-2 px-3 border-2 bg-green border-green shadow hover:shadow-lg hover:bg-dark-green text-white hover:border-green tracking-wider transform hover:scale-105 rounded;
 }
 
 .createEventSubmit {
-  @apply lg:w-56 mt-4 py-2 px-3 border-2 bg-green border-green shadow hover:shadow-lg hover:bg-dark-green text-white hover:border-green tracking-wider transform hover:scale-105 rounded;
+  @apply md:w-56 mt-4 py-2 px-3 border-2 bg-green border-green shadow hover:shadow-lg hover:bg-dark-green text-white hover:border-green tracking-wider transform hover:scale-105 rounded;
 }
 
 .createEventCancel {
-  @apply lg:w-56 mt-4 py-2 px-3 bg-transparent text-torch-red tracking-wider transform hover:scale-105;
+  @apply md:w-56 mt-4 py-2 px-3 bg-transparent text-torch-red tracking-wider transform hover:scale-105;
 }
 
 .leaveEventBtn {
-  @apply lg:w-44 mt-2 py-2 px-3 border-2 bg-ll-red border-ll-red shadow hover:shadow-lg hover:bg-torch-red text-white hover:border-ll-red tracking-wider transform hover:scale-105 rounded;
+  @apply md:w-44 mt-2 py-2 px-3 border-2 bg-ll-red border-ll-red shadow hover:shadow-lg hover:bg-torch-red text-white hover:border-ll-red tracking-wider transform hover:scale-105 rounded;
 }
 
 .deleteEventBtn {
@@ -105,20 +105,24 @@
 }
 
 .saveGCalBtn {
-  @apply lg:w-44 mt-2 py-2 px-3 mr-2 border-2 bg-light-navy border-light-navy text-xs shadow hover:shadow-lg hover:bg-navy text-white hover:border-light-navy tracking-wider transform hover:scale-105 rounded;
+  @apply md:w-44 mt-2 py-2 px-3 mr-2 border-2 bg-light-navy border-light-navy text-xs shadow hover:shadow-lg hover:bg-navy text-white hover:border-light-navy tracking-wider transform hover:scale-105 rounded;
 }
 
 .loginBtnInactive {
-  @apply bg-transparent px-4 ml-6 text-xl text-black hover:text-orange;
+  @apply bg-transparent px-4 ml-6 md:text-xl text-black hover:text-orange;
 }
 
 .loginBtnActive {
-  @apply bg-transparent px-4 ml-6 text-xl text-orange;
+  @apply bg-transparent px-4 ml-6 md:text-xl text-orange;
 }
 .registerBtnInactive {
-  @apply border-l border-black bg-transparent px-4 mr-2 text-xl text-black hover:text-orange;
+  @apply border-l border-black bg-transparent px-4 mr-2 md:text-xl text-black hover:text-orange;
 }
 
 .registerBtnActive {
-  @apply border-l border-black bg-transparent px-4 mr-2 text-xl text-orange;
+  @apply border-l border-black bg-transparent px-4 mr-2 md:text-xl text-orange;
+}
+
+.getStartedButton {
+  @apply md:self-center py-2 px-3 border-2 bg-orange border-orange shadow hover:shadow-lg hover:bg-light-orange text-white hover:border-orange tracking-wider transform hover:scale-105 rounded;
 }

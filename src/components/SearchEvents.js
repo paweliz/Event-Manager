@@ -9,9 +9,10 @@ const SearchEvents = () => {
   const [searchValue, setSearchValue] = useState('');
   const history = useHistory();
   const { pathname } = useLocation();
+  const today = new Date();
 
   useEffect(() => {
-    processSortedCollection('events', setEvents, 'date', 'asc');
+    processSortedCollection('events', setEvents, 'date', 'asc', today, '>=');
     // eventRef.on('value', snapshot => {
     //   const events = snapshot.val();
     //   const eventList = [];

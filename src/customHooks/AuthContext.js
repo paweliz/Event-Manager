@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState();
   const [loading, setLoading] = useState(true);
 
-  function signup(email, password, fullName) {
+  function signup(email, password, fullName, favouriteCategory) {
     return auth
       .createUserWithEmailAndPassword(email, password)
       .then(res => {
@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }) => {
           events: [],
           attendingEvents: [],
           dateCreated: Date.now(),
+          favouriteCategory: favouriteCategory,
         });
       });
   }

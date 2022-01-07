@@ -37,7 +37,7 @@ function App() {
             setNavbarVisible={setNavbarVisible}
           />
           <SearchEvents />
-          <div className={navbarVisible ? 'content mt-32' : 'content mt-24'}>
+          <div className={navbarVisible ? 'content mt-24' : 'content mt-16'}>
             <Switch>
               <Route exact path="/">
                 <Home />

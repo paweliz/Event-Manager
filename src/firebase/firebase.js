@@ -30,6 +30,12 @@ export const updateFullName = async (docId, fullName) => {
   });
 };
 
+export const updateFavCategory = async (docId, category) => {
+  return firestore().collection('users').doc(docId).update({
+    favouriteCategory: category,
+  });
+};
+
 export const updateUserEvents = async (docId, event, events, eventId) => {
   return firestore()
     .collection('users')

@@ -5,6 +5,7 @@ import {
   getUserByUserId,
   updateAvatarUrl,
   deleteImageFromStorage,
+  updateFavCategory,
 } from '../firebase/firebase';
 import { projectStorage } from '../firebase/firebaseConfig';
 import useStorage from '../customHooks/useStorage';
@@ -15,6 +16,7 @@ import { resizeFile } from '../utils/utils';
 const UpdateProfile = () => {
   const { currentUser } = useAuth();
   const [error, setError] = useState('');
+  const categoryRef = useRef();
   const history = useHistory();
   const [user, setUser] = useState(null);
   const [file, setFile] = useState(null);
@@ -76,6 +78,16 @@ const UpdateProfile = () => {
     };
     url && updateAvatar();
   }, [url]);
+
+  const submitHandler = async () => {
+    if (user.favouriteCategory && categoryRef !== user.favouriteCategory) {
+      await updateFavCategory(user?.docId, categoryRef).then(() => {
+        history.push('/');
+      });
+    } else {
+      history.push('/');
+    }
+  };
 
   return (
     <div className="m-4 flex justify-center mt-12">
@@ -152,6 +164,21 @@ const UpdateProfile = () => {
               Update fullname
             </Link>
           </div>
+          <div className="group -mx-4 mb-4 flex flex-col justify-between">
+            <label className="mb-2">Update favourite category:</label>
+            <select
+              ref={categoryRef}
+              className="cursor-pointer border-b-2 hover:border-black focus:outline-none w-full focus:border-black">
+              <option value="" selected="selected" hidden="hidden">
+                {user?.favouriteCategory}
+              </option>
+              <option value="Arts">Arts</option>
+              <option value="Business">Business</option>
+              <option value="Charity">Charity</option>
+              <option value="Music">Music</option>
+              <option value="Sports">Sports</option>
+            </select>
+          </div>
           <div className="group -mx-4 mb-4 p-1 border-b-2 hover:border-black focus-within:border-black">
             <svg
               className="w-5 inline-block mx-2"
@@ -187,9 +214,9 @@ const UpdateProfile = () => {
             </Link>
           </div>
           <div className="flex flex-row justify-center items-center ">
-            <Link className="submitButton" to="/">
+            <button onClick={submitHandler} className="submitButton" to="/">
               Submit
-            </Link>
+            </button>
           </div>
         </div>
       </div>

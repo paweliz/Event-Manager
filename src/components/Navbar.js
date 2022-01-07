@@ -33,6 +33,14 @@ const Navbar = ({ navbarVisible, setNavbarVisible }) => {
       setError('Failed to log out');
     }
   }
+  useEffect(() => {
+    if (currentUser === null) {
+      setNavbarVisible(false);
+    }
+    if (currentUser) {
+      setNavbarVisible(true);
+    }
+  }, [currentUser]);
 
   useEffect(() => {
     const checkIfClickedOutside = e => {
@@ -60,30 +68,31 @@ const Navbar = ({ navbarVisible, setNavbarVisible }) => {
     <nav className="navbar w-screen flex flex-col items-center bg-transparent fixed top-0 z-20 ">
       <div className="flex flex-row self-start items-center justify-between w-screen shadow-md border-b-2 border-orange">
         <Link to="/">
-          <h1 className="bg-transparent p-5 text-xl text-black">
+          <h1 className="bg-transparent p-5 text-m md:text-xl text-black">
             Event manager
           </h1>
         </Link>
-        <div
-          className="self-end justify-self-center "
-          onClick={() => setNavbarVisible(!navbarVisible)}>
-          <svg
-            className={
-              navbarVisible
-                ? 'w-6 h-6 bg-transparent stroke-current transform rotate-180'
-                : 'w-6 h-6 bg-transparent stroke-current'
-            }
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg">
-            <path stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </div>
-        <div className="flex flex-row items-center">
-          <SearchEvents />
-
-          {currentUser !== null ? (
+        {currentUser !== null && (
+          <div
+            className="self-end justify-self-center "
+            onClick={() => setNavbarVisible(!navbarVisible)}>
+            <svg
+              className={
+                navbarVisible
+                  ? 'w-6 h-6 bg-transparent stroke-current transform rotate-180'
+                  : 'w-6 h-6 bg-transparent stroke-current'
+              }
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
+        )}
+        {currentUser !== null ? (
+          <div className="flex flex-row items-center">
+            <SearchEvents />
             <div className="relative mr-4 bg-transparent">
               <button
                 className="group relative focus:outline-none"
@@ -110,7 +119,7 @@ const Navbar = ({ navbarVisible, setNavbarVisible }) => {
               </button>
               {modal && (
                 <div
-                  className="absolute right-0 z-20 top-15 md:w-48 -mr-4 border-t-2 border-orange bg-white rounded-md shadow-xl dark:bg-gray-800 w-screen"
+                  className="absolute right-0 z-20 top-15 w-screen md:w-48 md:-mr-4 border-t-2 border-orange bg-white rounded-md shadow-xl dark:bg-gray-800 w-screen"
                   ref={ref}>
                   <div className="p-3">
                     <h2>Hello, </h2>
@@ -133,9 +142,10 @@ const Navbar = ({ navbarVisible, setNavbarVisible }) => {
                 </div>
               )}
             </div>
-          ) : (
-            <div>
-              {/* <svg
+          </div>
+        ) : (
+          <div>
+            {/* <svg
               className="w-10 h-10 bg-transparent"
               fill="none"
               stroke="none"
@@ -145,27 +155,26 @@ const Navbar = ({ navbarVisible, setNavbarVisible }) => {
                 strokeWidth="2"
                 d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg> */}
-              <Link
-                to="/login"
-                className={
-                  location?.pathname === '/login'
-                    ? 'loginBtnActive'
-                    : 'loginBtnInactive'
-                }>
-                Login
-              </Link>
-              <Link
-                to="/signup"
-                className={
-                  location?.pathname === '/signup'
-                    ? 'registerBtnActive'
-                    : 'registerBtnInactive'
-                }>
-                Sign Up
-              </Link>
-            </div>
-          )}
-        </div>
+            <Link
+              to="/login"
+              className={
+                location?.pathname === '/login'
+                  ? 'loginBtnActive'
+                  : 'loginBtnInactive'
+              }>
+              Login
+            </Link>
+            <Link
+              to="/signup"
+              className={
+                location?.pathname === '/signup'
+                  ? 'registerBtnActive'
+                  : 'registerBtnInactive'
+              }>
+              Sign Up
+            </Link>
+          </div>
+        )}
       </div>
       {navbarVisible && (
         <div className="links flex flex-row w-screen">
