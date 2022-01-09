@@ -59,11 +59,11 @@ const EventsListPage = ({ calendarView, setCalendarView }) => {
   };
 
   return (
-    <div className="m-4">
+    <div className="flex-1 m-4">
       {loading ? (
         <EventsListSkeleton />
       ) : (
-        <>
+        <div className="flex-1">
           <EventsListComponent
             events={events}
             showCalendar={calendarView}
@@ -94,7 +94,7 @@ const EventsListPage = ({ calendarView, setCalendarView }) => {
           {calendarView && events?.length > 0 && (
             <CalendarComponent events={events} />
           )}
-        </>
+        </div>
       )}
     </div>
   );

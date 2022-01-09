@@ -134,7 +134,8 @@ const SignUp = () => {
           </div>
           {passwordError && (
             <div className="bg-red-500 text-white text-center p-2 mb-4">
-              enter valid password
+              Password should have at list 8 characters, 1 letter, 1 number and
+              1 special character. Please, enter valid password.
             </div>
           )}
           <div className="group -mx-4 mb-4 p-1 border-b-2 hover:border-gray-900 focus-within:border-gray-900">

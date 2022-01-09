@@ -249,7 +249,7 @@ const EventsDetails = () => {
   // );
 
   return (
-    <div className="py-6 mx-auto max-w-4xl grid justify-items-center">
+    <div className="py-6 mx-auto max-w-4xl flex-1 justify-items-center">
       <Modal showModal={modalOpen} setShowModal={setModalOpen}>
         {people?.map(person => (
           <PersonForm person={person[0]} />
@@ -260,10 +260,15 @@ const EventsDetails = () => {
       ) : (
         <article>
           <Breadcrumbs />
-          <div className="flex flex-row bg-transparent">
+          <div className="flex flex-col md:flex-row bg-transparent">
+            <center>
+              <h2 className="text-2xl mb-4 md:mb-0 visible md:invisible font-bold justify-self-center bg-transparent">
+                {events.title}
+              </h2>
+            </center>
             {events.image ? (
               <img
-                className="flex-auto w-full max-w-xl h-72 object-cover "
+                className="flex-auto bg-transparent w-full max-w-xl h-72 object-cover "
                 src={events.image}
                 alt={events.title + ' image'}
               />
@@ -274,7 +279,7 @@ const EventsDetails = () => {
             )}
             <div className="px-4 pb-4 flex-col items-start bg-transparent">
               <center>
-                <h2 className="text-xl font-bold justify-self-center bg-transparent">
+                <h2 className="text-xl -mb-4 md:mb-0 invisible md:visible font-bold justify-self-center bg-transparent">
                   {events.title}
                 </h2>
               </center>
@@ -370,9 +375,10 @@ const EventsDetails = () => {
             <div className="flex justify-center">
               <iframe
                 title="map"
-                width="600"
-                height="450"
+                //width="16rem"
+                //height="14rem"
                 // style="border:0"
+                className="w-full h-64"
                 loading="lazy"
                 allowFullScreen
                 src={`https://www.google.com/maps/embed/v1/place?key=${process.env.REACT_APP_MAPS_API_KEY}&q=${events.coordinates.lat},${events.coordinates.lng}`}></iframe>
