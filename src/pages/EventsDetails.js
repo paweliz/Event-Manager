@@ -283,12 +283,14 @@ const EventsDetails = () => {
                   {events.title}
                 </h2>
               </center>
-              <p className="text-lg font-bold pt-3 bg-transparent">
+              <p className="text-sm font-bold pt-3 bg-transparent">
                 {events?.date?.seconds
                   ? moment(events?.date?.seconds * 1000).format('llll')
-                  : events.date}-{events?.endDate?.seconds
-                    ? moment(events?.endDate?.seconds * 1000).format('llll')
-                    : events.endDate}
+                  : events.date}
+                -
+                {events?.endDate?.seconds
+                  ? moment(events?.endDate?.seconds * 1000).format('llll')
+                  : events.endDate}
               </p>
               <p onClick={participantsHandler} className="bg-transparent mt-1">
                 Participants: {events?.participants?.length}/
