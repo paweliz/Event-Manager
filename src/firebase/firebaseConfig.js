@@ -20,5 +20,4 @@ export const databaseStorage = app.database();
 export const auth = app.auth();
 export const firestore = firebase.firestore;
 export const db = getFirestore(app);
-export const { FieldValue } = firebase.firestore;
 export default app;

@@ -37,7 +37,7 @@ function App() {
             setNavbarVisible={setNavbarVisible}
           />
           <SearchEvents />
-          <div className={navbarVisible ? 'content mt-24' : 'content mt-16'}>
+          <div className={navbarVisible ? 'content mt-28' : 'content mt-16'}>
             <Switch>
               <Route exact path="/">
                 <Home />
@@ -48,12 +48,12 @@ function App() {
               <ProtectedRoute path="/events/:id">
                 <EventsDetails />
               </ProtectedRoute>
-              <Route path="/events">
+              <ProtectedRoute path="/events">
                 <EventsListPage
                   calendarView={calendarView}
                   setCalendarView={setCalendarView}
                 />
-              </Route>
+              </ProtectedRoute>
               <ProtectedRoute path="/myevents/:id">
                 <EventsDetails />
               </ProtectedRoute>
@@ -99,9 +99,9 @@ function App() {
               <ProtectedRoute path="/user/:id">
                 <UserPreview />
               </ProtectedRoute>
-              <Route path="/nearyou">
+              <ProtectedRoute path="/nearyou">
                 <NearYou />
-              </Route>
+              </ProtectedRoute>
               <Route path="*">
                 <NotFound />
               </Route>
